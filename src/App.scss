@@ -20,22 +20,19 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-}
-
-.speakerOptionWrapper {
-  display: flex;
-  flex: 1;
-  li {
-    display: flex;
-    flex: 9;
+  .dialogue-type {
+    width: 10%;
   }
-  .deleteOption {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex: 1;
-    border-radius: 10px;
-    border: 1px solid red;
-    color: red
+  .dialogue-input {
+    flex: 1
+  }
+  .speakerOptionWrapper {
+    width: 15%;
+  }
+  .emotion-type {
+    width: 10%;
+  }
+  .position-type {
+    width: 7.5%;
   }
 }
