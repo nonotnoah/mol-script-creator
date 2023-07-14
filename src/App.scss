@@ -15,7 +15,16 @@
   border: 1px solid red;
 }
 
+.row-wrapper {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
 .row {
+  position: relative;
   display: flex;
   width: 100%;
   justify-content: center;
@@ -24,15 +33,23 @@
     width: 10%;
   }
   .dialogue-input {
-    flex: 1
+    flex: 1;
   }
   .speakerOptionWrapper {
-    width: 15%;
+    width: 12%;
   }
   .emotion-type {
     width: 10%;
   }
   .position-type {
     width: 7.5%;
+  }
+  .label-input {
+    width: 6%;
+  }
+  .response {
+    flex: 1;
+    // position: absolute;
+    // bottom: -2rem
   }
 }

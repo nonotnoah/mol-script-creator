@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { ChangeProps } from './types'
 
 export default function Position({ handleChange }: ChangeProps) {
-  const [positionType, setPositionType] = React.useState<string>('left')
+  const [positionType, setPositionType] = React.useState('left')
   return (
     <FormControl className='position-type'>
       <InputLabel id="position-type">Position</InputLabel>
