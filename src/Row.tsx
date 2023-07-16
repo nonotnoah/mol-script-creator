@@ -8,9 +8,10 @@ import Position from './Row Components/Position';
 import Response from './Row Components/Response';
 import Label from './Row Components/Label';
 
-import { Button } from '@mui/material'
-import { Add } from '@mui/icons-material'
-import { Res } from './Row Components/types';
+import { Button, Fab } from '@mui/material'
+import { Add, DeleteOutline } from '@mui/icons-material'
+import { Res, RowProps } from './Row Components/types';
+import { Message } from './Row Components/types';
 
 interface RowData {
   dialogueType: string,
@@ -26,29 +27,13 @@ interface RowData {
     next: string
   }[]
 }
-export interface Message {
-  m?: string
-  q?: string
-  char?: string
-  label?: string
-  next?: string
-  res: {
-    id: number
-    m: string
-    level?: number // only show if player meets compatability req
-    next: string
-  }[]
-  emotion?: string
-  location?: string
-  pos?: string
-}
 
-export default function Row() {
+export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
   const [diagType, setDiagType] = React.useState<string>('Dialogue')
-  const [diag, setDiag] = React.useState<string>('')
+  const [diag, setDiag] = React.useState<string>(rowData.m || '')
   const [speaker, setSpeaker] = React.useState<string>('')
-  const [emotion, setEmotion] = React.useState<string>('neutral')
-  const [pos, setPos] = React.useState('left')
+  const [emotion, setEmotion] = React.useState<string>(rowData.emotion || 'neutral')
+  const [pos, setPos] = React.useState(rowData.pos || 'left')
   const [label, setLabel] = React.useState<string>('')
 
 
@@ -93,7 +78,7 @@ export default function Row() {
   // console.log("🚀 ~ file: Row.tsx:59 ~ Row ~ resArray:", (resRef))
 
   const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
-  const [resArray, setResArray] = React.useState<{ [id: number]: JSX.Element }>({})
+  const [resObj, setResObj] = React.useState<{ [id: number]: JSX.Element }>({})
   const resId = React.useRef(0)
   const addRes = () => {
     const resCopy = { ...resRef.current }
@@ -106,28 +91,28 @@ export default function Row() {
         deleteRes={id => deleteRes(id)}
       />
     // setResArray(resCopy)
-    setResArray(obj => ({ ...obj, ...resCopy }))
-    resRef.current = { ...resArray, ...resCopy }
+    setResObj(obj => ({ ...obj, ...resCopy }))
+    resRef.current = { ...resObj, ...resCopy }
   }
   const setResInRowData = (res: Res, id: number) => {
-    const resObj = rowData.current.res?.find(res => res.id === id)
-    if (!resObj) {
-      rowData.current.res = [...rowData.current.res, { id: id, m: res.m, next: res.next }]
+    const resInRowObj = componentRowData.current.res?.find(res => res.id === id)
+    if (!resInRowObj) {
+      componentRowData.current.res = [...componentRowData.current.res, { id: id, m: res.m, next: res.next }]
       return
     }
-    const resIdx = rowData.current.res?.indexOf(resObj)
-    if ((resIdx > -1) && rowData.current.res) {
-      rowData.current.res[resIdx] = { id: id, m: res.m, next: res.next }
+    const resIdx = componentRowData.current.res?.indexOf(resInRowObj)
+    if ((resIdx > -1) && componentRowData.current.res) {
+      componentRowData.current.res[resIdx] = { id: id, m: res.m, next: res.next }
     }
   }
   const deleteResInRowData = (id: number) => {
-    const resObj = rowData.current.res?.find(res => res.id === id)
+    const resObj = componentRowData.current.res?.find(res => res.id === id)
     if (!resObj) {
       return
     }
-    const resIdx = rowData.current.res?.indexOf(resObj)
-    if ((resIdx > -1) && rowData.current.res) {
-      delete rowData.current.res[resIdx]
+    const resIdx = componentRowData.current.res?.indexOf(resObj)
+    if ((resIdx > -1) && componentRowData.current.res) {
+      delete componentRowData.current.res[resIdx]
     }
   }
   const setResData = (res: Res, id: number) => {
@@ -141,23 +126,23 @@ export default function Row() {
         returnResData={(val, id) => setResData(val, id)}
         deleteRes={id => deleteRes(id)}
       />
-    setResArray(obj => ({ ...obj, ...resCopy }))
-    resRef.current = { ...resArray, ...resCopy }
-    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
+    setResObj(obj => ({ ...obj, ...resCopy }))
+    resRef.current = { ...resObj, ...resCopy }
+    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentRowData.current)
   }
   const deleteRes = (id: number) => {
     deleteResInRowData(id)
     const resCopy = { ...resRef.current }
     delete resCopy[id]
-    setResArray(resCopy)
+    setResObj(resCopy)
     resRef.current = { ...resCopy }
   }
 
-  const rowData = React.useRef<Message>({ res: [] })
+  const componentRowData = React.useRef<Message>({ res: [] })
 
   React.useEffect(() => {
     if (diagType == 'Narrator') {
-      rowData.current = {
+      componentRowData.current = {
         m: diag,
         label: label,
         emotion: '',
@@ -165,21 +150,21 @@ export default function Row() {
         res: []
       }
       resRef.current = {}
-      setResArray({})
-      console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
-      return
+      setResObj({})
     }
-    rowData.current = {
-      m: diag,
-      label: label,
-      emotion: emotion,
-      pos: pos,
-      char: speaker,
-      res: rowData.current.res
-      // ...rowData.current
+    if (diagType == 'Dialogue') {
+      componentRowData.current = {
+        m: diag,
+        label: label,
+        emotion: emotion,
+        pos: pos,
+        char: speaker,
+        res: componentRowData.current.res
+        // ...rowData.current
+      }
     }
-
-    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
+    returnRowData(componentRowData.current, id)
+    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentRowData.current)
 
   }, [diagType, diag, speaker, emotion, pos, label,])
 
@@ -187,6 +172,11 @@ export default function Row() {
     <>
       <div className="row-wrapper">
         <div className='row'>
+          <div className="delete-row-btn-wrapper">
+            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+              <DeleteOutline color='error' />
+            </Fab>
+          </div>
           <Label handleChange={(value) => setLabel(value)} />
           <DialogueType handleChange={(value) => setDiagType(value)} />
           <Dialogue handleChange={(value) => setDiag(value)} />
@@ -195,21 +185,21 @@ export default function Row() {
               <Speaker handleChange={(value) => setSpeaker(value)} />
               <Emotion handleChange={(value) => setEmotion(value)} />
               <Position handleChange={(value) => setPos(value)} />
+              <div className="add-res-btn-wrapper ">
+                <Fab
+                  className='add-res-btn hide'
+                  size='small'
+                  onClick={() => addRes()}
+                ><Add /></Fab>
+              </div>
             </>
           )}
         </div >
         {(diagType == 'Dialogue') && (
           <>
-            {Object.values(resArray).map(res => (
+            {Object.values(resObj).map(res => (
               res
             ))}
-            <div className="add-res-btn">
-              <Button
-                variant='outlined'
-                startIcon={<Add />}
-                onClick={() => addRes()}
-              >response</Button>
-            </div>
           </>
         )}
       </div>

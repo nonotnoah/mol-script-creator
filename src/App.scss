@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: calc(2rem);
   text-align: center;
 }
 
@@ -11,23 +11,44 @@
 
 .wrapper {
   display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 
 .row-wrapper {
+  // border: 1px solid red;
   position: relative;
   display: flex;
   flex-flow: column;
   width: 100%;
+  // height: 55px;
   justify-content: center;
   align-items: center;
   .row {
-    position: relative;
+    // position: absolute;
     display: flex;
     width: 100%;
     justify-content: center;
     align-items: center;
+    .delete-row-btn-wrapper,
+    .add-res-btn-wrapper {
+      width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .delete-row-btn {
+      display: none;
+      z-index: 1;
+    }
+    .add-res-btn {
+      display: none;
+      z-index: 1;
+    }
     .label-input {
       width: 6%;
     }
@@ -50,29 +71,56 @@
   .response {
     display: flex;
     flex: 1;
+    align-items: center;
+    justify-content: center;
     // margin-left: 16%;
-    .padding {
+    .left-padding {
       width: 16%;
+    }
+    .id {
+      position: absolute;
+      left: calc(16% + 30px);
     }
     .dialogue-input {
       flex: 1;
     }
     .next-input {
-      width: 22%;
+      width: 12%;
+    }
+    .right-padding {
+      width: calc(7.5% + 60px + 10%);
     }
     .delete-wrapper {
+      width: 7.5%;
+      display: flex;
+      height: auto;
       .delete-btn {
         display: flex;
         flex: 1;
       }
-        width: 7.5%;
-      display: flex;
-      height: auto;
     }
   }
-  .add-res-btn {
+}
+.row:hover + .hide {
+  display: flex;
+}
+.row:hover {
+  .hide {
+    display: flex;
+  }
+}
+.hide {
+  display: none;
+}
+.add-row-btn-wrapper {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+    position: relative;
+  .add-row-btn {
     // display: flex;
     position: absolute;
-    bottom: -40px;
+    bottom: -70px;
+    right: calc(60px);
   }
 }

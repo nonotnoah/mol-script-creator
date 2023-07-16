@@ -1,3 +1,21 @@
+export interface Message {
+  id?: number
+  m?: string
+  q?: string
+  char?: string
+  label?: string
+  next?: string
+  res: {
+    id: number
+    m: string
+    level?: number // only show if player meets compatability req
+    next: string
+  }[]
+  emotion?: string
+  location?: string
+  pos?: string
+}
+
 export interface ChangeProps {
   handleChange: (val: string) => void
 }
@@ -13,4 +31,14 @@ export interface ResProps {
   id: number
   returnResData: (res: Res, id: number) => void
   deleteRes: (id: number) => void
+}
+
+interface RowWithId extends Message {
+  id: number
+}
+export interface RowProps {
+  rowData: Message
+  id: number
+  returnRowData: (row: Message, id: number) => void
+  deleteRow: (id: number) => void
 }
