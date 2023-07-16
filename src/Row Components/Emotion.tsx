@@ -2,10 +2,10 @@ import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { ChangeProps } from './types';
 
-const emotions = ['Neutral', 'Happy', 'Sad', 'Disgusted', 'Angry', 'Fearful', 'Surprised']
+const emotions = ['neutral', 'happy', 'sad', 'disgusted', 'angry', 'fearful', 'surprised']
 
 export default function Emotion({ handleChange }: ChangeProps) {
-  const [emotionType, setEmotionType] = React.useState<string>('Neutral')
+  const [emotionType, setEmotionType] = React.useState<string>('neutral')
   return (
     <FormControl className='emotion-type'>
       <InputLabel id="emotion-type">Emotion</InputLabel>
@@ -19,10 +19,14 @@ export default function Emotion({ handleChange }: ChangeProps) {
           handleChange(event.target.value)
         }}
       >
-        {emotions.map(emotion => (
-          <MenuItem value={emotion}>{emotion}</MenuItem>
+        {emotions.map((emotion) => (
+          <MenuItem key={emotion} value={emotion}>{titleCase(emotion)}</MenuItem>
         ))}
       </Select>
     </FormControl>
   )
+}
+
+const titleCase = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.substring(1)
 }

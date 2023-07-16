@@ -8,6 +8,10 @@ import Position from './Row Components/Position';
 import Response from './Row Components/Response';
 import Label from './Row Components/Label';
 
+import { Button } from '@mui/material'
+import { Add } from '@mui/icons-material'
+import { Res } from './Row Components/types';
+
 interface RowData {
   dialogueType: string,
   dialogue: string,
@@ -28,7 +32,8 @@ export interface Message {
   char?: string
   label?: string
   next?: string
-  res?: {
+  res: {
+    id: number
     m: string
     level?: number // only show if player meets compatability req
     next: string
@@ -42,12 +47,113 @@ export default function Row() {
   const [diagType, setDiagType] = React.useState<string>('Dialogue')
   const [diag, setDiag] = React.useState<string>('')
   const [speaker, setSpeaker] = React.useState<string>('')
-  const [emotion, setEmotion] = React.useState<string>('')
-  const [pos, setPos] = React.useState('')
+  const [emotion, setEmotion] = React.useState<string>('neutral')
+  const [pos, setPos] = React.useState('left')
   const [label, setLabel] = React.useState<string>('')
-  const [res, setRes] = React.useState<string>('')
 
-  const rowData = React.useRef<Message>({})
+
+  // const [resArray, setResArray] = React.useState<{ [id: number]: JSX.Element }>({})
+  // const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
+  // const resId = React.useRef(0)
+  // const addRes = () => {
+  //   const resCopy = { ...resRef.current }
+  //   resCopy[resId.current += 1] =
+  //     <Response
+  //       id={resId.current}
+  //       resData={{ m: '', next: '' }}
+  //       returnResData={(val, id) => setResData(val, id)}
+  //       deleteRes={id => deleteRes(id)}
+  //     />
+  //   resRef.current = { ...resRef.current, ...resCopy }
+  //   setResArray(resRef.current)
+  //   // setResArray(obj => ({ ...obj, ...resCopy }))
+  // }
+  // const deleteRes = (id: number) => {
+  //   const resCopy = { ...resRef }
+  //   console.log("🚀 ~ file: Row.tsx:69 ~ deleteRes ~ resCopy:", resCopy)
+  //   // delete resCopy[id]
+  //   // console.log("🚀 ~ file: Row.tsx:71 ~ deleteRes ~ id:", id)
+  //   // console.log("🚀 ~ file: Row.tsx:71 ~ deleteRes ~ resCopy:", resCopy)
+  //   // setResArray(resCopy)
+
+  // }
+  // const setResData = (res: Res, id: number) => {
+  //   const resCopy = { ...resRef }
+  //   resCopy.current[id] =
+  //     <Response
+  //       id={id}
+  //       resData={{ m: res.m, next: res.next }}
+  //       returnResData={(val, id) => setResData(val, id)}
+  //       deleteRes={id => deleteRes(id)}
+  //     />
+  //   // setResArray(obj => ({ ...obj, ...resCopy }))
+  //   resRef.current = { ...resRef.current, ...resCopy }
+  //   setResArray(resRef.current)
+  // }
+  // console.log("🚀 ~ file: Row.tsx:59 ~ Row ~ resArray:", (resRef))
+
+  const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
+  const [resArray, setResArray] = React.useState<{ [id: number]: JSX.Element }>({})
+  const resId = React.useRef(0)
+  const addRes = () => {
+    const resCopy = { ...resRef.current }
+    resCopy[resId.current += 1] =
+      <Response
+        key={`response${resId.current}`}
+        id={resId.current}
+        resData={{ m: '', next: '' }}
+        returnResData={(val, id) => setResData(val, id)}
+        deleteRes={id => deleteRes(id)}
+      />
+    // setResArray(resCopy)
+    setResArray(obj => ({ ...obj, ...resCopy }))
+    resRef.current = { ...resArray, ...resCopy }
+  }
+  const setResInRowData = (res: Res, id: number) => {
+    const resObj = rowData.current.res?.find(res => res.id === id)
+    if (!resObj) {
+      rowData.current.res = [...rowData.current.res, { id: id, m: res.m, next: res.next }]
+      return
+    }
+    const resIdx = rowData.current.res?.indexOf(resObj)
+    if ((resIdx > -1) && rowData.current.res) {
+      rowData.current.res[resIdx] = { id: id, m: res.m, next: res.next }
+    }
+  }
+  const deleteResInRowData = (id: number) => {
+    const resObj = rowData.current.res?.find(res => res.id === id)
+    if (!resObj) {
+      return
+    }
+    const resIdx = rowData.current.res?.indexOf(resObj)
+    if ((resIdx > -1) && rowData.current.res) {
+      delete rowData.current.res[resIdx]
+    }
+  }
+  const setResData = (res: Res, id: number) => {
+    setResInRowData(res, id)
+    const resCopy = { ...resRef.current }
+    resCopy[id] =
+      <Response
+        key={`response${id}`}
+        id={id}
+        resData={{ m: res.m, next: res.next }}
+        returnResData={(val, id) => setResData(val, id)}
+        deleteRes={id => deleteRes(id)}
+      />
+    setResArray(obj => ({ ...obj, ...resCopy }))
+    resRef.current = { ...resArray, ...resCopy }
+    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
+  }
+  const deleteRes = (id: number) => {
+    deleteResInRowData(id)
+    const resCopy = { ...resRef.current }
+    delete resCopy[id]
+    setResArray(resCopy)
+    resRef.current = { ...resCopy }
+  }
+
+  const rowData = React.useRef<Message>({ res: [] })
 
   React.useEffect(() => {
     if (diagType == 'Narrator') {
@@ -56,7 +162,11 @@ export default function Row() {
         label: label,
         emotion: '',
         char: 'system',
+        res: []
       }
+      resRef.current = {}
+      setResArray({})
+      console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
       return
     }
     rowData.current = {
@@ -64,11 +174,14 @@ export default function Row() {
       label: label,
       emotion: emotion,
       pos: pos,
-      char: speaker
+      char: speaker,
+      res: rowData.current.res
+      // ...rowData.current
     }
 
+    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", rowData.current)
 
-  }, [diagType, diag, speaker, emotion, pos, label])
+  }, [diagType, diag, speaker, emotion, pos, label,])
 
   return (
     <>
@@ -85,9 +198,20 @@ export default function Row() {
             </>
           )}
         </div >
-        <div className="row">
-          <Response />
-        </div>
+        {(diagType == 'Dialogue') && (
+          <>
+            {Object.values(resArray).map(res => (
+              res
+            ))}
+            <div className="add-res-btn">
+              <Button
+                variant='outlined'
+                startIcon={<Add />}
+                onClick={() => addRes()}
+              >response</Button>
+            </div>
+          </>
+        )}
       </div>
     </>
   )

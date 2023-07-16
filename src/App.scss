@@ -22,34 +22,57 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-}
-.row {
-  position: relative;
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  .dialogue-type {
-    width: 10%;
-  }
-  .dialogue-input {
-    flex: 1;
-  }
-  .speakerOptionWrapper {
-    width: 12%;
-  }
-  .emotion-type {
-    width: 10%;
-  }
-  .position-type {
-    width: 7.5%;
-  }
-  .label-input {
-    width: 6%;
+  .row {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    .label-input {
+      width: 6%;
+    }
+    .dialogue-type {
+      width: 10%;
+    }
+    .dialogue-input {
+      flex: 1;
+    }
+    .speakerOptionWrapper {
+      width: 12%;
+    }
+    .emotion-type {
+      width: 10%;
+    }
+    .position-type {
+      width: 7.5%;
+    }
   }
   .response {
+    display: flex;
     flex: 1;
-    // position: absolute;
-    // bottom: -2rem
+    // margin-left: 16%;
+    .padding {
+      width: 16%;
+    }
+    .dialogue-input {
+      flex: 1;
+    }
+    .next-input {
+      width: 22%;
+    }
+    .delete-wrapper {
+      .delete-btn {
+        display: flex;
+        flex: 1;
+      }
+        width: 7.5%;
+      display: flex;
+      height: auto;
+    }
+  }
+  .add-res-btn {
+    // display: flex;
+    position: absolute;
+    bottom: -40px;
   }
 }
