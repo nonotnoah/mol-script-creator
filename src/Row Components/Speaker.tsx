@@ -9,6 +9,7 @@ export default function Speaker({ handleChange }: ChangeProps) {
   const [charValue, setCharValue] = React.useState<string | null>(null)
   return (
     <Autocomplete
+      size='small'
       className='speakerOptionWrapper'
       value={charValue}
       onChange={(event, value) => {

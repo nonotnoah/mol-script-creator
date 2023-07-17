@@ -8,6 +8,7 @@ export default function Position({ handleChange }: ChangeProps) {
     <FormControl className='position-type'>
       <InputLabel id="position-type">Position</InputLabel>
       <Select
+        size='small'
         labelId="position-type"
         id="position-type"
         value={positionType}

@@ -11,6 +11,7 @@ export default function Dialogue({ handleChange }: ChangeProps) {
   return (
 
     <TextField
+    size='small'
     label='Dialogue'
       className='dialogue-input'
       inputProps={{ maxLength: maxLength }}

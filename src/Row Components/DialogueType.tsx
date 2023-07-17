@@ -8,6 +8,7 @@ export default function DialogueType({ handleChange }: ChangeProps) {
     <FormControl className='dialogue-type'>
       <InputLabel id="dialogue-type">Type</InputLabel>
       <Select
+        sx={{height: 40}}
         labelId="dialogue-type"
         id="dialogue-type"
         value={dialogueType}

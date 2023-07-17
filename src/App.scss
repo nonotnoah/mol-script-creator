@@ -29,7 +29,10 @@
   justify-content: center;
   align-items: center;
   .row {
+    // height: 40px;
+    // border: 3px solid white;
     // position: absolute;
+    padding-bottom: 10px;
     display: flex;
     width: 100%;
     justify-content: center;
@@ -41,10 +44,7 @@
       justify-content: center;
       align-items: center;
     }
-    .delete-row-btn {
-      display: none;
-      z-index: 1;
-    }
+    .delete-row-btn,
     .add-res-btn {
       display: none;
       z-index: 1;
@@ -73,6 +73,7 @@
     flex: 1;
     align-items: center;
     justify-content: center;
+    margin-top: -10px;
     // margin-left: 16%;
     .left-padding {
       width: 16%;
@@ -116,7 +117,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-    position: relative;
+  position: relative;
   .add-row-btn {
     // display: flex;
     position: absolute;

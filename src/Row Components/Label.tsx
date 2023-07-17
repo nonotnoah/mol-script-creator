@@ -5,6 +5,7 @@ import { TextField } from '@mui/material'
 export default function Label({ handleChange }: ChangeProps) {
   return (
     <TextField
+      size='small'
       label='Label'
       className='label-input'
       onChange={(event) => {

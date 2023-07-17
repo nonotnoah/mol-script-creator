@@ -10,6 +10,7 @@ export default function Emotion({ handleChange }: ChangeProps) {
     <FormControl className='emotion-type'>
       <InputLabel id="emotion-type">Emotion</InputLabel>
       <Select
+        size='small'
         labelId="emotion-type"
         id="emotion-type"
         value={emotionType}

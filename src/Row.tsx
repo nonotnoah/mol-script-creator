@@ -194,6 +194,9 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
               </div>
             </>
           )}
+          {(diagType == 'Narrator') && (
+            < div className="add-res-btn-wrapper" />
+          )}
         </div >
         {(diagType == 'Dialogue') && (
           <>
@@ -202,7 +205,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
             ))}
           </>
         )}
-      </div>
+      </div >
     </>
   )
 }
