@@ -36,47 +36,6 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   const [pos, setPos] = React.useState(rowData.pos || 'left')
   const [label, setLabel] = React.useState<string>('')
 
-
-  // const [resArray, setResArray] = React.useState<{ [id: number]: JSX.Element }>({})
-  // const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
-  // const resId = React.useRef(0)
-  // const addRes = () => {
-  //   const resCopy = { ...resRef.current }
-  //   resCopy[resId.current += 1] =
-  //     <Response
-  //       id={resId.current}
-  //       resData={{ m: '', next: '' }}
-  //       returnResData={(val, id) => setResData(val, id)}
-  //       deleteRes={id => deleteRes(id)}
-  //     />
-  //   resRef.current = { ...resRef.current, ...resCopy }
-  //   setResArray(resRef.current)
-  //   // setResArray(obj => ({ ...obj, ...resCopy }))
-  // }
-  // const deleteRes = (id: number) => {
-  //   const resCopy = { ...resRef }
-  //   console.log("🚀 ~ file: Row.tsx:69 ~ deleteRes ~ resCopy:", resCopy)
-  //   // delete resCopy[id]
-  //   // console.log("🚀 ~ file: Row.tsx:71 ~ deleteRes ~ id:", id)
-  //   // console.log("🚀 ~ file: Row.tsx:71 ~ deleteRes ~ resCopy:", resCopy)
-  //   // setResArray(resCopy)
-
-  // }
-  // const setResData = (res: Res, id: number) => {
-  //   const resCopy = { ...resRef }
-  //   resCopy.current[id] =
-  //     <Response
-  //       id={id}
-  //       resData={{ m: res.m, next: res.next }}
-  //       returnResData={(val, id) => setResData(val, id)}
-  //       deleteRes={id => deleteRes(id)}
-  //     />
-  //   // setResArray(obj => ({ ...obj, ...resCopy }))
-  //   resRef.current = { ...resRef.current, ...resCopy }
-  //   setResArray(resRef.current)
-  // }
-  // console.log("🚀 ~ file: Row.tsx:59 ~ Row ~ resArray:", (resRef))
-
   const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
   const [resObj, setResObj] = React.useState<{ [id: number]: JSX.Element }>({})
   const resId = React.useRef(0)
@@ -170,42 +129,40 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
 
   return (
     <>
-      <div className="row-wrapper">
-        <div className='row'>
-          <div className="delete-row-btn-wrapper">
-            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
-              <DeleteOutline color='error' />
-            </Fab>
-          </div>
-          <Label handleChange={(value) => setLabel(value)} />
-          <DialogueType handleChange={(value) => setDiagType(value)} />
-          <Dialogue handleChange={(value) => setDiag(value)} />
-          {(diagType == 'Dialogue') && (
-            <>
-              <Speaker handleChange={(value) => setSpeaker(value)} />
-              <Emotion handleChange={(value) => setEmotion(value)} />
-              <Position handleChange={(value) => setPos(value)} />
-              <div className="add-res-btn-wrapper ">
-                <Fab
-                  className='add-res-btn hide'
-                  size='small'
-                  onClick={() => addRes()}
-                ><Add /></Fab>
-              </div>
-            </>
-          )}
-          {(diagType == 'Narrator') && (
-            < div className="add-res-btn-wrapper" />
-          )}
-        </div >
+      <div className='row'>
+        <div className="delete-row-btn-wrapper">
+          <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+            <DeleteOutline color='error' />
+          </Fab>
+        </div>
+        <Label handleChange={(value) => setLabel(value)} />
+        <DialogueType handleChange={(value) => setDiagType(value)} />
+        <Dialogue handleChange={(value) => setDiag(value)} />
         {(diagType == 'Dialogue') && (
           <>
-            {Object.values(resObj).map(res => (
-              res
-            ))}
+            <Speaker handleChange={(value) => setSpeaker(value)} />
+            <Emotion handleChange={(value) => setEmotion(value)} />
+            <Position handleChange={(value) => setPos(value)} />
+            <div className="add-res-btn-wrapper ">
+              <Fab
+                className='add-res-btn hide'
+                size='small'
+                onClick={() => addRes()}
+              ><Add /></Fab>
+            </div>
           </>
         )}
+        {(diagType == 'Narrator') && (
+          < div className="add-res-btn-wrapper" />
+        )}
       </div >
+      {(diagType == 'Dialogue') && (
+        <>
+          {Object.values(resObj).map(res => (
+            res
+          ))}
+        </>
+      )}
     </>
   )
 }

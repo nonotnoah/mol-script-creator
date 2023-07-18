@@ -97,8 +97,8 @@ function App() {
     <>
       <GlobalContext.Provider value={GlobalState}>
         <div className="wrapper">
-          {Object.values(rowObj).map(res => (
-            res
+          {Object.values(rowObj).map((res, idx) => (
+            <div className="row-wrapper" key={idx}>{res}</div>
           ))}
           <div className="add-row-btn-wrapper">
             <div className="add-row-btn">
