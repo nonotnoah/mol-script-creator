@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Fab, TextField } from '@mui/material'
 import { DeleteForeverOutlined, DeleteOutline } from '@mui/icons-material'
-import { ChangeProps, Res, ResProps } from './types'
+import { ChangeProps, Res, ResProps } from '../types'
 import Dialogue from './Dialogue'
 import Next from './Next'
 import Label from './Label'

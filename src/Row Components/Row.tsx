@@ -10,8 +10,8 @@ import Label from './Label';
 
 import { Button, Fab } from '@mui/material'
 import { Add, DeleteOutline } from '@mui/icons-material'
-import { Res, RowProps } from './types';
-import { Message } from './types';
+import { Res, RowProps } from '../types';
+import { Message } from '../types';
 
 interface RowData {
   label: string

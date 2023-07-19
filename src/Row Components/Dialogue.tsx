@@ -1,7 +1,7 @@
 import React from 'react'
 import { TextField, InputAdornment } from '@mui/material'
 const maxLength = 100
-import { ChangeProps } from './types';
+import { ChangeProps } from '../types';
 
 export default function Dialogue({ handleChange }: ChangeProps) {
   const [remainingCharacters, setRemainingCharacters] = React.useState<number>(maxLength)

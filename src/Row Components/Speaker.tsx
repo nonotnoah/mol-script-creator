@@ -1,6 +1,6 @@
 import React from 'react'
 import { Autocomplete, TextField } from '@mui/material'
-import { ChangeProps } from './types'
+import { ChangeProps } from '../types'
 
 const defaultCharacters = ['Juice', 'Harry']
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
-import { ChangeProps } from './types';
+import { ChangeProps } from '../types';
 
 const emotions = ['neutral', 'happy', 'sad', 'disgusted', 'angry', 'fearful', 'surprised']
 

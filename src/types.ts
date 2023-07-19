@@ -42,3 +42,8 @@ export interface RowProps {
   returnRowData: (row: Message, id: number) => void
   deleteRow: (id: number) => void
 }
+
+export interface ScriptStore {
+  script: Message[]
+  title: string
+}
