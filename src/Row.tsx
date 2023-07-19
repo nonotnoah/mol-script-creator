@@ -28,7 +28,11 @@ interface RowData {
   }[]
 }
 
+// combine useRef and useState
+// or
+// merge all the useStates into one useState object + useRef object like App.tsx
 export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
+  console.log(rowData)
   const [diagType, setDiagType] = React.useState<string>('Dialogue')
   const [diag, setDiag] = React.useState<string>(rowData.m || '')
   const [speaker, setSpeaker] = React.useState<string>('')
@@ -123,9 +127,9 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
       }
     }
     returnRowData(componentRowData.current, id)
-    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentRowData.current)
+    // console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentRowData.current)
 
-  }, [diagType, diag, speaker, emotion, pos, label,])
+  }, [diagType, diag, speaker, emotion, pos, label])
 
   return (
     <>

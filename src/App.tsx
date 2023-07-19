@@ -25,66 +25,76 @@ function App() {
   const [rowObj, setRowObj] = React.useState<{ [id: number]: JSX.Element }>({})
   const rowId = React.useRef(0)
   const addRow = () => {
+    const id = rowId.current += 1
+    console.log(id, 'added')
     const rowCopy = { ...rowRef.current }
-    rowCopy[rowId.current += 1] =
+    rowCopy[id] =
       <Row
         // key={`row${rowId.current}`}
-        id={rowId.current}
+        id={id}
         rowData={{ m: '', res: [], label: '', emotion: 'neutral', pos: 'left', }}
-        returnRowData={(val, id) => setRowData(val, id)}
+        returnRowData={(val, id) => editRowData(val, id)}
         deleteRow={id => deleteRow(id)}
       />
-    // setRowArray(rowCopy)
-    setRowObj(obj => ({ ...obj, ...rowCopy }))
-    rowRef.current = { ...rowObj, ...rowCopy }
+    addRowInScriptData(id)
+    rowRef.current = { ...rowCopy }
+    console.log("🚀 ~ file: App.tsx:41 ~ addRow ~ rowRef.current:", rowRef.current)
+    setRowObj({ ...rowCopy })
   }
-  const setRowInScriptData = (row: Message, id: number) => {
+  const addRowInScriptData = (id: number) => {
+    componentScriptData.current = [...componentScriptData.current, { id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', }]
+    // console.log("🚀 ~ file: App.tsx:43 ~ addRowInScriptData ~ componentScriptData:", componentScriptData.current)
+  }
+  const editRowInScriptData = (newRow: Message, id: number) => {
     const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
     if (!rowInScriptObj) {
-      componentScriptData.current = [...componentScriptData.current, { id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', }]
       return
     }
     const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
     if ((rowIdx > -1) && componentScriptData.current) {
-      componentScriptData.current[rowIdx] = { id: id, ...row }
+      // componentScriptData.current[rowIdx] = { id: id, ...newRow }
     }
   }
   const deleteRowInScriptData = (id: number) => {
-    const rowObj = componentScriptData.current.find(row => row.id === id)
-    if (!rowObj) {
+    const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
+    if (!rowInScriptObj) {
       return
     }
-    const rowIdx = componentScriptData.current.indexOf(rowObj)
-    if ((rowIdx > -1) && componentScriptData.current) {
-      delete componentScriptData.current[rowIdx]
-    }
+    const filtered = componentScriptData.current.filter(row => row != rowInScriptObj)
+    componentScriptData.current = filtered
+    // console.log("🚀 ~ file: App.tsx:64 ~ deleteRowInScriptData ~ componentScriptData:", componentScriptData)
   }
-  const setRowData = (row: Message, id: number) => {
-    setRowInScriptData(row, id)
+  const editRowData = (row: Message, id: number) => {
+    console.log(id, 'updated')
+    console.log((row.m || 'undef'))
+    editRowInScriptData(row, id)
     const rowCopy = { ...rowRef.current }
     rowCopy[id] =
       <Row
         // key={`row${id}`}
         id={id}
-        rowData={{ ...row }}
-        returnRowData={(val, id) => setRowData(val, id)}
+        rowData={row}
+        returnRowData={(val, id) => editRowData(val, id)}
         deleteRow={id => deleteRow(id)}
       />
-    setRowObj(obj => ({ ...obj, ...rowCopy }))
-    rowRef.current = { ...rowObj, ...rowCopy }
-    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentScriptData.current)
+    rowRef.current = { ...rowCopy }
+    setRowObj({ ...rowCopy })
+    console.log("🚀 ~ file: App.tsx:79 ~ editRowData ~ rowRef:", rowRef.current)
   }
   const deleteRow = (id: number) => {
+    console.log(id, 'deleted')
     deleteRowInScriptData(id)
     const rowCopy = { ...rowRef.current }
     delete rowCopy[id]
     if (Object.keys(rowRef.current).length == 0) {
-      setRowObj({})
+      componentScriptData.current = []
       rowRef.current = {}
+      setRowObj({})
       return
     }
-    setRowObj(rowCopy)
     rowRef.current = { ...rowCopy }
+    console.log("🚀 ~ file: App.tsx:95 ~ deleteRow ~ rowRef.current:", rowRef.current)
+    setRowObj({ ...rowCopy })
   }
 
   // React.useEffect(() => {
@@ -97,7 +107,7 @@ function App() {
     <>
       <GlobalContext.Provider value={GlobalState}>
         <div className="wrapper">
-          {Object.values(rowObj).map((res, idx) => (
+          {Object.values(rowRef.current).map((res, idx) => (
             <div className="row-wrapper" key={idx}>{res}</div>
           ))}
           <div className="add-row-btn-wrapper">
