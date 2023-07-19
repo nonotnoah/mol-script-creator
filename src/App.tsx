@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, createContext, MutableRefObject, useRef } from 'react'
 import './App.scss'
-import Row from './Row'
+import Row from './Row Components/Row'
 import { Message } from './Row Components/types'
 import { Button, Fab } from '@mui/material'
 import { Add } from '@mui/icons-material'
@@ -52,7 +52,7 @@ function App() {
     }
     const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
     if ((rowIdx > -1) && componentScriptData.current) {
-      // componentScriptData.current[rowIdx] = { id: id, ...newRow }
+      componentScriptData.current[rowIdx] = { id: id, ...newRow }
     }
   }
   const deleteRowInScriptData = (id: number) => {
@@ -108,7 +108,9 @@ function App() {
       <GlobalContext.Provider value={GlobalState}>
         <div className="wrapper">
           {Object.values(rowRef.current).map((res, idx) => (
-            <div className="row-wrapper" key={idx}>{res}</div>
+            <div className="row-wrapper" key={idx}>
+              {res}
+            </div>
           ))}
           <div className="add-row-btn-wrapper">
             <div className="add-row-btn">

@@ -1,0 +1,180 @@
+import React from 'react'
+
+import DialogueType from './DialogueType';
+import Dialogue from './Dialogue';
+import Speaker from './Speaker';
+import Emotion from './Emotion';
+import Position from './Position';
+import Response from './Response';
+import Label from './Label';
+
+import { Button, Fab } from '@mui/material'
+import { Add, DeleteOutline } from '@mui/icons-material'
+import { Res, RowProps } from './types';
+import { Message } from './types';
+
+interface RowData {
+  label: string
+  dialogueType: string
+  dialogue: string
+  speaker: string
+  emotion: string
+  position: string
+}
+
+export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
+  // manage state for all inputs in this component
+  const rowDataRef = React.useRef<RowData>({
+    label: rowData.label || '',
+    dialogueType: 'Dialogue',
+    dialogue: rowData.m || '',
+    speaker: rowData.char || '',
+    emotion: rowData.emotion || '',
+    position: rowData.pos || '',
+  })
+  const [rowDataState, setRowDataState] = React.useState<RowData>({ ...rowDataRef.current })
+  const editRowData = (key: string, val: string) => {
+    rowDataRef.current = { ...rowDataRef.current, [key]: val }
+    setRowDataState({ ...rowDataRef.current, [key]: val })
+  }
+
+  const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
+  const [resObj, setResObj] = React.useState<{ [id: number]: JSX.Element }>({})
+  const resId = React.useRef(0)
+  const addRes = () => {
+    const id = resId.current += 1
+    const resCopy = { ...resRef.current }
+    resCopy[id] =
+      <Response
+        key={`response${resId.current}`}
+        id={resId.current}
+        resData={{ m: '', next: '' }}
+        returnResData={(val, id) => editResData(val, id)}
+        deleteRes={id => deleteRes(id)}
+      />
+    addResInRowData(id)
+    resRef.current = { ...resCopy }
+    setResObj({ ...resCopy })
+  }
+  const addResInRowData = (id: number) => {
+    thisRowData.current.res = [...thisRowData.current.res, { id: id, m: '', next: '' }]
+    // console.log("🚀 ~ file: App.tsx:43 ~ addRowInScriptData ~ componentScriptData:", componentScriptData.current)
+  }
+  const editResInRowData = (res: Res, id: number) => {
+    const resInRowObj = thisRowData.current.res?.find(res => res.id === id)
+    if (!resInRowObj) {
+      return
+    }
+    const resIdx = thisRowData.current.res?.indexOf(resInRowObj)
+    if ((resIdx > -1) && thisRowData.current.res) {
+      thisRowData.current.res[resIdx] = { id: id, m: res.m, next: res.next }
+    }
+  }
+  const deleteResInRowData = (id: number) => {
+    const resInRowObj = thisRowData.current.res?.find(res => res.id === id)
+    if (!resInRowObj) {
+      return
+    }
+    const filtered = thisRowData.current.res.filter(res => res != resInRowObj)
+    thisRowData.current.res = filtered
+  }
+  const editResData = (res: Res, id: number) => {
+    editResInRowData(res, id)
+    const resCopy = { ...resRef.current }
+    resCopy[id] =
+      <Response
+        key={`response${id}`}
+        id={id}
+        resData={{ m: res.m, next: res.next }}
+        returnResData={(val, id) => editResData(val, id)}
+        deleteRes={id => deleteRes(id)}
+      />
+    resRef.current = { ...resCopy }
+    setResObj({ ...resCopy })
+    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", thisRowData.current)
+  }
+  const deleteRes = (id: number) => {
+    deleteResInRowData(id)
+    const resCopy = { ...resRef.current }
+    delete resCopy[id]
+    if (Object.keys(resRef.current).length == 0) {
+      thisRowData.current.res = []
+      resRef.current = {}
+      setResObj({})
+      return
+    }
+    resRef.current = { ...resCopy }
+    console.log("🚀 ~ file: App.tsx:95 ~ deleteRow ~ rowRef.current:", rowRef.current)
+    setResObj({ ...resCopy })
+  }
+
+  const thisRowData = React.useRef<Message>({ res: [] })
+
+  React.useEffect(() => {
+    if (rowDataState.dialogueType == 'Narrator') {
+      thisRowData.current = {
+        m: rowDataRef.current.dialogue,
+        label: rowDataRef.current.label,
+        emotion: '',
+        char: 'system',
+        res: []
+      }
+      resRef.current = {}
+      setResObj({})
+    }
+    if (rowDataState.dialogueType == 'Dialogue') {
+      thisRowData.current = {
+        m: rowDataRef.current.dialogue,
+        label: rowDataRef.current.label,
+        emotion: rowDataRef.current.emotion,
+        pos: rowDataRef.current.position,
+        char: rowDataRef.current.speaker,
+
+        res: thisRowData.current.res
+      }
+    }
+    returnRowData(thisRowData.current, id)
+    // console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", componentRowData.current)
+
+  }, [rowDataState])
+
+
+  return (
+    <>
+      <div className='row'>
+        <div className="delete-row-btn-wrapper">
+          <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+            <DeleteOutline color='error' />
+          </Fab>
+        </div>
+        <Label handleChange={(value) => editRowData('label', value)} />
+        <DialogueType handleChange={(value) => editRowData('dialogueType', value)} />
+        <Dialogue handleChange={(value) => editRowData('dialogue', value)} />
+        {(rowDataState.dialogueType == 'Dialogue') && (
+          <>
+            <Speaker handleChange={(value) => editRowData('speaker', value)} />
+            <Emotion handleChange={(value) => editRowData('emotion', value)} />
+            <Position handleChange={(value) => editRowData('position', value)} />
+            <div className="add-res-btn-wrapper ">
+              <Fab
+                className='add-res-btn hide'
+                size='small'
+                onClick={() => addRes()}
+              ><Add /></Fab>
+            </div>
+          </>
+        )}
+        {(rowDataState.dialogueType == 'Narrator') && (
+          < div className="add-res-btn-wrapper" />
+        )}
+      </div >
+      {(rowDataState.dialogueType == 'Dialogue') && (
+        <>
+          {Object.values(resObj).map(res => (
+            res
+          ))}
+        </>
+      )}
+    </>
+  )
+}
