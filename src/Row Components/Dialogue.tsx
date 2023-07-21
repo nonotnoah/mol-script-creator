@@ -3,7 +3,7 @@ import { TextField, InputAdornment } from '@mui/material'
 const maxLength = 100
 import { ChangeProps } from '../types';
 
-export default function Dialogue({ handleChange }: ChangeProps) {
+export default function Dialogue({ initVal, handleChange }: ChangeProps) {
   const [remainingCharacters, setRemainingCharacters] = React.useState<number>(maxLength)
   const handleRemainingCharacters = (current: number) => {
     setRemainingCharacters(maxLength - current)
@@ -26,6 +26,7 @@ export default function Dialogue({ handleChange }: ChangeProps) {
           </InputAdornment>
         )
       }}
+      defaultValue={initVal}
     />
   )
 }

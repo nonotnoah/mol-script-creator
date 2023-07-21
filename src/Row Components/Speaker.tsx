@@ -4,7 +4,7 @@ import { ChangeProps } from '../types'
 
 const defaultCharacters = ['Juice', 'Harry']
 
-export default function Speaker({ handleChange }: ChangeProps) {
+export default function Speaker({ initVal, handleChange }: ChangeProps) {
   const [characters, setCharacters] = React.useState(defaultCharacters)
   const [charValue, setCharValue] = React.useState<string | null>(null)
   return (
@@ -26,6 +26,7 @@ export default function Speaker({ handleChange }: ChangeProps) {
       options={characters}
       renderOption={(props, option) => <li {...props}>{option}</li>}
       renderInput={(params) => (<TextField {...params} label="Speaker" />)}
+      defaultValue={initVal}
     />
   )
 }

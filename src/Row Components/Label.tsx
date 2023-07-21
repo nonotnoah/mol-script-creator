@@ -2,7 +2,7 @@ import React from 'react'
 import { ChangeProps } from '../types'
 import { TextField } from '@mui/material'
 
-export default function Label({ handleChange }: ChangeProps) {
+export default function Label({ initVal, handleChange }: ChangeProps) {
   return (
     <TextField
       size='small'
@@ -11,6 +11,7 @@ export default function Label({ handleChange }: ChangeProps) {
       onChange={(event) => {
         handleChange(event.target.value)
       }}
+      defaultValue={initVal}
     />
   )
 }

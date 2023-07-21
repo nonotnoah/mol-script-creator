@@ -23,15 +23,17 @@ interface RowData {
 }
 
 export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
+  console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   // manage state for all inputs in this component
   const rowDataRef = React.useRef<RowData>({
-    label: rowData.label || '',
+    label: rowData.label,
     dialogueType: 'Dialogue',
-    dialogue: rowData.m || '',
-    speaker: rowData.char || '',
-    emotion: rowData.emotion || '',
-    position: rowData.pos || '',
+    dialogue: rowData.m,
+    speaker: rowData.char,
+    emotion: rowData.emotion,
+    position: rowData.pos,
   })
+  console.log(rowDataRef.current)
   const [rowDataState, setRowDataState] = React.useState<RowData>({ ...rowDataRef.current })
   const editRowData = (key: string, val: string) => {
     rowDataRef.current = { ...rowDataRef.current, [key]: val }
@@ -104,26 +106,29 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
       return
     }
     resRef.current = { ...resCopy }
-    console.log("🚀 ~ file: App.tsx:95 ~ deleteRow ~ rowRef.current:", rowRef.current)
+    // console.log("🚀 ~ file: App.tsx:95 ~ deleteRow ~ rowRef.current:", rowRef.current)
     setResObj({ ...resCopy })
   }
 
-  const thisRowData = React.useRef<Message>({ res: [] })
+  const thisRowData = React.useRef<Message>({ id: id, res: [] })
 
   React.useEffect(() => {
     if (rowDataState.dialogueType == 'Narrator') {
       thisRowData.current = {
+        id: id,
         m: rowDataRef.current.dialogue,
         label: rowDataRef.current.label,
         emotion: '',
         char: 'system',
-        res: []
+        res: [],
+        pos: ''
       }
       resRef.current = {}
       setResObj({})
     }
     if (rowDataState.dialogueType == 'Dialogue') {
       thisRowData.current = {
+        id: id,
         m: rowDataRef.current.dialogue,
         label: rowDataRef.current.label,
         emotion: rowDataRef.current.emotion,
@@ -142,19 +147,20 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   return (
     <>
       <div className='row'>
+        {rowData.m}
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
             <DeleteOutline color='error' />
           </Fab>
         </div>
-        <Label handleChange={(value) => editRowData('label', value)} />
-        <DialogueType handleChange={(value) => editRowData('dialogueType', value)} />
-        <Dialogue handleChange={(value) => editRowData('dialogue', value)} />
+        <Label initVal={rowData.label} handleChange={(value) => editRowData('label', value)} />
+        <DialogueType initVal={rowDataRef.current.dialogueType} handleChange={(value) => editRowData('dialogueType', value)} />
+        <Dialogue initVal={rowData.m} handleChange={(value) => editRowData('dialogue', value)} />
         {(rowDataState.dialogueType == 'Dialogue') && (
           <>
-            <Speaker handleChange={(value) => editRowData('speaker', value)} />
-            <Emotion handleChange={(value) => editRowData('emotion', value)} />
-            <Position handleChange={(value) => editRowData('position', value)} />
+            <Speaker initVal={rowDataRef.current.speaker} handleChange={(value) => editRowData('speaker', value)} />
+            <Emotion initVal={rowDataRef.current.emotion} handleChange={(value) => editRowData('emotion', value)} />
+            <Position initVal={rowDataRef.current.position} handleChange={(value) => editRowData('position', value)} />
             <div className="add-res-btn-wrapper ">
               <Fab
                 className='add-res-btn hide'

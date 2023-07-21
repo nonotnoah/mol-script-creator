@@ -1,9 +1,9 @@
 export interface Message {
-  id?: number
-  m?: string
+  id: number
+  m: string
   q?: string
-  char?: string
-  label?: string
+  char: string
+  label: string
   next?: string
   res: {
     id: number
@@ -11,12 +11,13 @@ export interface Message {
     level?: number // only show if player meets compatability req
     next: string
   }[]
-  emotion?: string
+  emotion: string
   location?: string
-  pos?: string
+  pos: string
 }
 
 export interface ChangeProps {
+  initVal: string,
   handleChange: (val: string) => void
 }
 
