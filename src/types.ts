@@ -1,4 +1,5 @@
 export interface Message {
+  type: 'Dialogue' | 'Narrator'
   id: number
   m: string
   q?: string

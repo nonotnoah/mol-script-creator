@@ -6,14 +6,14 @@ const defaultCharacters = ['Juice', 'Harry']
 
 export default function Speaker({ initVal, handleChange }: ChangeProps) {
   const [characters, setCharacters] = React.useState(defaultCharacters)
-  const [charValue, setCharValue] = React.useState<string | null>(null)
+  // const [charValue, setCharValue] = React.useState<string | null>(null)
   return (
     <Autocomplete
       size='small'
       className='speakerOptionWrapper'
-      value={charValue}
+      value={initVal}
       onChange={(event, value) => {
-        setCharValue(value);
+        // setCharValue(value);
         if (!value) {
           const empty = ''
           handleChange(empty)
@@ -26,7 +26,7 @@ export default function Speaker({ initVal, handleChange }: ChangeProps) {
       options={characters}
       renderOption={(props, option) => <li {...props}>{option}</li>}
       renderInput={(params) => (<TextField {...params} label="Speaker" />)}
-      defaultValue={initVal}
+      // defaultValue={initVal}
     />
   )
 }

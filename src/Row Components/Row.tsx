@@ -110,11 +110,12 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
     setResObj({ ...resCopy })
   }
 
-  const thisRowData = React.useRef<Message>({ id: id, res: [] })
+  const thisRowData = React.useRef<Message>({ type: 'Dialogue', id: id, m: '', res: [], char: '', label: '', emotion: '', pos: '' })
 
   React.useEffect(() => {
     if (rowDataState.dialogueType == 'Narrator') {
       thisRowData.current = {
+        type: 'Narrator',
         id: id,
         m: rowDataRef.current.dialogue,
         label: rowDataRef.current.label,
@@ -128,13 +129,13 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
     }
     if (rowDataState.dialogueType == 'Dialogue') {
       thisRowData.current = {
+        type: 'Dialogue',
         id: id,
         m: rowDataRef.current.dialogue,
         label: rowDataRef.current.label,
         emotion: rowDataRef.current.emotion,
         pos: rowDataRef.current.position,
         char: rowDataRef.current.speaker,
-
         res: thisRowData.current.res
       }
     }
@@ -146,7 +147,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
 
   return (
     <>
-      <div className='row'>
+      <div className='row' key={`row${rowData.id}`}>
         {rowData.m}
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
@@ -154,13 +155,13 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
           </Fab>
         </div>
         <Label initVal={rowData.label} handleChange={(value) => editRowData('label', value)} />
-        <DialogueType initVal={rowDataRef.current.dialogueType} handleChange={(value) => editRowData('dialogueType', value)} />
+        <DialogueType initVal={rowData.type} handleChange={(value) => editRowData('dialogueType', value)} />
         <Dialogue initVal={rowData.m} handleChange={(value) => editRowData('dialogue', value)} />
         {(rowDataState.dialogueType == 'Dialogue') && (
           <>
-            <Speaker initVal={rowDataRef.current.speaker} handleChange={(value) => editRowData('speaker', value)} />
-            <Emotion initVal={rowDataRef.current.emotion} handleChange={(value) => editRowData('emotion', value)} />
-            <Position initVal={rowDataRef.current.position} handleChange={(value) => editRowData('position', value)} />
+            <Speaker initVal={rowData.char} handleChange={(value) => editRowData('speaker', value)} />
+            <Emotion initVal={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
+            <Position initVal={rowData.pos} handleChange={(value) => editRowData('position', value)} />
             <div className="add-res-btn-wrapper ">
               <Fab
                 className='add-res-btn hide'

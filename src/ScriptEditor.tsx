@@ -5,9 +5,16 @@ import { Message, ScriptStore } from './types'
 import { Button, Fab } from '@mui/material'
 import { Add, Save } from '@mui/icons-material'
 
-function ScriptEditor(script?: Message[], title: string) {
+interface ScriptEditProps {
+  loadedScript: ScriptStore,
+}
+
+function ScriptEditor({ loadedScript }: ScriptEditProps) {
+  React.useEffect(() => {
+    addRow()
+  }, [])
   const loadScript = () => {
-    script && script.map(msg => {
+    loadedScript && loadedScript.map(msg => {
       const id = rowId.current += 1
       const importedMsg = {
         m: msg.m || '',
@@ -36,7 +43,7 @@ function ScriptEditor(script?: Message[], title: string) {
     const id = rowId.current += 1
     console.log(id, 'added')
     const rowCopy = { ...rowRef.current }
-    rowCopy[id] = { id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', char: '' }
+    rowCopy[id] = { type: 'Dialogue', id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', char: '' }
     rowRef.current = { ...rowCopy }
     setRowObj({ ...rowCopy })
     componentScriptData.current = [...componentScriptData.current, { ...rowCopy[id] }]
@@ -82,19 +89,21 @@ function ScriptEditor(script?: Message[], title: string) {
   const save = () => {
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'false') as ScriptStore[] | boolean
     if (typeof scripts === 'object') {
-      const updated = [...scripts, { script: componentScriptData.current, title: title }]
+      const updated = [...scripts, { script: componentScriptData.current, title: loadedScript.title }]
       localStorage.setItem('scripts', JSON.stringify(updated))
       return
     }
-    const updated = [{ script: componentScriptData.current, title: title }]
+    const updated = [{ script: componentScriptData.current, title: loadedScript.title }]
     localStorage.setItem('scripts', JSON.stringify(updated))
   }
   return (
     <>
       <div className="wrapper">
+        <div className="title-wrapper">
+          <h1>Title</h1>
+        </div>
         {Object.values(rowObj).map((row, idx) => (
           <div className="row-wrapper" key={idx}>
-            {idx} has {Object.entries(row).map(entry => entry)}
             <Row
               id={row.id}
               rowData={row}

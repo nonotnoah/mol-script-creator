@@ -125,3 +125,15 @@
     right: calc(60px);
   }
 }
+
+.home-wrapper {
+  display: flex;
+  justify-content: left;
+  flex-flow: column;
+  flex: 1;
+  // border: 1px solid red;
+  .title-wrapper {
+  display: flex;
+    border: 1px solid red;
+  }
+}
