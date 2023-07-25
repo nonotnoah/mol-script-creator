@@ -11,7 +11,12 @@ interface ScriptEditProps {
 
 function ScriptEditor({ loadedScript }: ScriptEditProps) {
   React.useEffect(() => {
-    addRow()
+    componentScriptData.current = loadedScript.script
+    setRowObj(loadedScript.script)
+    console.log("🚀 ~ file: ScriptEditor.tsx:15 ~ React.useEffect ~ loadedScript:", loadedScript)
+    if (loadedScript.title == 'Untitled Script') {
+      addRow()
+    }
   }, [])
   const loadScript = () => {
     loadedScript && loadedScript.map(msg => {
@@ -38,7 +43,7 @@ function ScriptEditor({ loadedScript }: ScriptEditProps) {
   }
   const rowRef = React.useRef<{ [id: number]: Message }>({})
   const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>({})
-  const rowId = React.useRef(0)
+  const rowId = React.useRef(Object.keys(loadedScript.script).length)
   const addRow = () => {
     const id = rowId.current += 1
     console.log(id, 'added')
@@ -100,7 +105,7 @@ function ScriptEditor({ loadedScript }: ScriptEditProps) {
     <>
       <div className="wrapper">
         <div className="title-wrapper">
-          <h1>Title</h1>
+          <h1>{loadedScript.title}</h1>
         </div>
         {Object.values(rowObj).map((row, idx) => (
           <div className="row-wrapper" key={idx}>

@@ -148,7 +148,6 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   return (
     <>
       <div className='row' key={`row${rowData.id}`}>
-        {rowData.m}
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
             <DeleteOutline color='error' />

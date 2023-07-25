@@ -12,7 +12,7 @@ export default function Project({ navigate, script }: ProjectProps) {
       onClick={() => navigate(script)}
     >
       <h2 className="project-title">
-        {script.title}
+        title: {script.title}
       </h2>
     </div>
   )

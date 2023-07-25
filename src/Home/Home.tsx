@@ -22,6 +22,7 @@ export default function Home() {
   }, [])
 
   const navigate = (chosenScript: ScriptStore) => {
+    console.log(chosenScript)
     script.current = chosenScript
     setShowScript(true)
   }
@@ -36,10 +37,12 @@ export default function Home() {
       <div className="home-wrapper">
         {!showScript && (
           <>
-            <h1>Scripts</h1>
+            <div className="title-wrapper">
+              <h1>Scripts</h1>
+            </div>
             <div className="projects-wrapper">
-              <Grid container>
-                <Grid item key='new'>
+              <Grid container spacing={2}>
+                <Grid item xs={3}key='new'>
                   <div
                     className="project-wrapper"
                     onClick={() => createNewScript()}
@@ -50,7 +53,7 @@ export default function Home() {
                   </div>
                 </Grid>
                 {scripts.map((script, idx) => (
-                  <Grid item key={idx}>
+                  <Grid item xs={3} key={idx}>
                     <Project script={script} navigate={(script) => navigate(script)}></Project>
                   </Grid>
                 ))}
