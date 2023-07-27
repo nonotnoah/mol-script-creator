@@ -21,20 +21,19 @@ const router = createBrowserRouter([
     path: 'script/new',
     element:
       // <Suspense fallback={<Loading></Loading>}>
-        <ScriptEditor />,
-      // </Suspense >,
+      <ScriptEditor />,
+    // </Suspense >,
   },
   {
     path: 'script/:scriptId',
     element:
       // <Suspense fallback={<Loading></Loading>}>
-        <ScriptEditor />,
-      // </Suspense >,
+      <ScriptEditor />,
+    // </Suspense >,
   }
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-  // <App />
-  <RouterProvider router={router}></RouterProvider>
+    <RouterProvider router={router}></RouterProvider>
   // </React.StrictMode>,
 )

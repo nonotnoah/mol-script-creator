@@ -25,15 +25,16 @@ interface RowData {
 export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
   console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   // manage state for all inputs in this component
-  const rowDataRef = React.useRef<RowData>({
+  const data = {
     label: rowData.label,
     dialogueType: rowData.type,
     dialogue: rowData.m,
     speaker: rowData.char,
     emotion: rowData.emotion,
     position: rowData.pos,
-  })
-  const [rowDataState, setRowDataState] = React.useState<RowData>({ ...rowDataRef.current })
+  }
+  const rowDataRef = React.useRef<RowData>(data)
+  const [rowDataState, setRowDataState] = React.useState<RowData>(data)
   const editRowData = (key: string, val: string) => {
     rowDataRef.current = { ...rowDataRef.current, [key]: val }
     setRowDataState({ ...rowDataRef.current, [key]: val })
