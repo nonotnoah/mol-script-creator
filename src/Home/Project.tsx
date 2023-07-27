@@ -1,19 +1,27 @@
 import React from 'react'
 import { Message, ScriptStore } from '../types'
+import { Link } from 'react-router-dom'
 interface ProjectProps {
-  navigate: (script: ScriptStore) => void,
+  // navigate: (script: ScriptStore) => void,
   script: ScriptStore
 }
-export default function Project({ navigate, script }: ProjectProps) {
+export default function Project({ script }: ProjectProps) {
 
   return (
-    <div
-      className="project-wrapper"
-      onClick={() => navigate(script)}
-    >
-      <h2 className="project-title">
-        title: {script.title}
-      </h2>
-    </div>
+    <Link
+      to={`script/${script.id}`}
+      state={{
+        id: script.id,
+        script: script.script,
+        title: script.title
+      }}>
+      <div
+        className="project-wrapper"
+      >
+        <h2 className="project-title">
+          title: {script.title}
+        </h2>
+      </div>
+    </Link>
   )
 }

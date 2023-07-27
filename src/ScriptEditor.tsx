@@ -1,65 +1,98 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useState, createContext, MutableRefObject, useRef } from 'react'
 import Row from './Row Components/Row'
-import { Message, ScriptStore } from './types'
-import { Button, Fab } from '@mui/material'
+import { Message, ScriptStore, Store } from './types'
+import { Button, Fab, TextField } from '@mui/material'
 import { Add, Save } from '@mui/icons-material'
+import { useParams, useLocation } from 'react-router-dom'
+import Loading from './Loading'
+import Title from './Row Components/Title'
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
-interface ScriptEditProps {
-  loadedScript: ScriptStore,
-}
+// interface ScriptEditProps {
+//   loadedScript: ScriptStore,
+// }
+const getItemStyle = (isDragging: boolean, draggableStyle: React.CSSProperties) => ({
+  padding: 10,
+  margin: `0 50px 15px 50px`,
+  color: isDragging ? 'white' : 'black',
+  border: `1px solid black`,
+  borderRadius: `10px`,
 
-function ScriptEditor({ loadedScript }: ScriptEditProps) {
-  React.useEffect(() => {
-    componentScriptData.current = loadedScript.script
-    setRowObj(loadedScript.script)
-    console.log("🚀 ~ file: ScriptEditor.tsx:15 ~ React.useEffect ~ loadedScript:", loadedScript)
-    if (loadedScript.title == 'Untitled Script') {
-      addRow()
-    }
-  }, [])
-  const loadScript = () => {
-    loadedScript && loadedScript.map(msg => {
-      const id = rowId.current += 1
-      const importedMsg = {
-        m: msg.m || '',
-        char: msg.char || '',
-        res: msg.res || [],
-        label: msg.label || '',
-        emotion: msg.emotion || 'neutral',
-        pos: msg.pos || 'left',
-      }
-      componentScriptData.current = [...componentScriptData.current, importedMsg]
-      rowRef.current[id] =
-        <Row
-          // key={`row${rowId.current}`}
-          id={id}
-          rowData={importedMsg}
-          returnRowData={(val, id) => editRowData(val, id)}
-          deleteRow={id => deleteRow(id)}
-        />
-    })
-    setRowObj({ ...rowRef.current })
-  }
+  ...draggableStyle
+})
+
+function ScriptEditor() {
+  const scriptId = React.useRef(Math.random().toString())
+  const [scriptTitle, setScriptTitle] = React.useState('Untitled Script')
+  // const scriptTitle = React.useRef('Untitled Script')
+  const componentScriptData = React.useRef<Message[]>([])
   const rowRef = React.useRef<{ [id: number]: Message }>({})
   const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>({})
-  const rowId = React.useRef(Object.keys(loadedScript.script).length)
+  const rowId = React.useRef(0)
+  // const { params } = useParams()
+  const location = useLocation()
+  const state = location.state as ScriptStore
+  React.useEffect(() => {
+    if (state) {
+      componentScriptData.current = state.script
+      setScriptTitle(state.title)
+      console.log("🚀 ~ file: ScriptEditor.tsx:30 ~ React.useEffect ~ state:", state)
+      scriptId.current = state.id
+      setRowObj(state.script)
+      rowId.current = componentScriptData.current.length
+      return
+    }
+  }, [])
+
+  const onDragEnd = (result: DropResult) => {
+    const source = result.source
+    const destination = result.destination
+    if (!destination) return
+
+    const items = Array.from(componentScriptData.current)
+    const [newOrder] = items.splice(source.index, 1)
+    items.splice(destination.index, 0, newOrder)
+  }
+
+  const save = () => {
+    const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
+    console.log("🚀 ~ file: ScriptEditor.tsx:42 ~ save ~ scripts:", scripts)
+    if (scripts != null) {
+      console.log('scripts exist, saving over top')
+      const newScript: ScriptStore =
+      {
+        id: scriptId.current,
+        script: componentScriptData.current,
+        title: scriptTitle
+      }
+      const updated = { ...scripts, [scriptId.current]: newScript }
+      localStorage.setItem('scripts', JSON.stringify(updated))
+      return
+    }
+    console.log('starting new store')
+    const newScript: ScriptStore =
+    {
+      id: scriptId.current,
+      script: componentScriptData.current,
+      title: scriptTitle
+    }
+    const updated = { [scriptId.current]: newScript }
+    localStorage.setItem('scripts', JSON.stringify(updated))
+  }
   const addRow = () => {
     const id = rowId.current += 1
     console.log(id, 'added')
-    const rowCopy = { ...rowRef.current }
-    rowCopy[id] = { type: 'Dialogue', id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', char: '' }
-    rowRef.current = { ...rowCopy }
-    setRowObj({ ...rowCopy })
-    componentScriptData.current = [...componentScriptData.current, { ...rowCopy[id] }]
+    const newRow: Message = { type: 'Dialogue', id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', char: '' }
+    rowRef.current[id] = newRow
+    setRowObj({ ...rowRef.current })
+    componentScriptData.current = [...componentScriptData.current, { ...rowRef.current[id] }]
   }
   const editRowData = (newRow: Message, id: number) => {
     console.log(id, 'updated')
     console.log((newRow.m || 'undef'))
-    const rowCopy = { ...rowRef.current }
-    rowCopy[id] = { ...newRow }
-    rowRef.current = { ...rowCopy }
-    setRowObj({ ...rowCopy })
+    rowRef.current[id] = newRow
+    setRowObj({ ...rowRef.current })
 
     const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
     if (!rowInScriptObj) {
@@ -67,13 +100,12 @@ function ScriptEditor({ loadedScript }: ScriptEditProps) {
     }
     const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
     if ((rowIdx > -1) && componentScriptData.current) {
-      componentScriptData.current[rowIdx] = { ...newRow }
+      componentScriptData.current[rowIdx] = newRow
     }
   }
   const deleteRow = (id: number) => {
     console.log(id, 'deleted')
-    const rowCopy = { ...rowRef.current }
-    delete rowCopy[id]
+    delete rowRef.current[id]
     const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
     if (!rowInScriptObj) {
       return
@@ -85,38 +117,31 @@ function ScriptEditor({ loadedScript }: ScriptEditProps) {
       setRowObj({})
       return
     }
-    rowRef.current = { ...rowCopy }
-    setRowObj({ ...rowCopy })
+    setRowObj({ ...rowRef.current })
   }
 
-  const componentScriptData = React.useRef<Message[]>([])
 
-  const save = () => {
-    const scripts = JSON.parse(localStorage.getItem('scripts') || 'false') as ScriptStore[] | boolean
-    if (typeof scripts === 'object') {
-      const updated = [...scripts, { script: componentScriptData.current, title: loadedScript.title }]
-      localStorage.setItem('scripts', JSON.stringify(updated))
-      return
-    }
-    const updated = [{ script: componentScriptData.current, title: loadedScript.title }]
-    localStorage.setItem('scripts', JSON.stringify(updated))
-  }
   return (
     <>
       <div className="wrapper">
-        <div className="title-wrapper">
-          <h1>{loadedScript.title}</h1>
-        </div>
-        {Object.values(rowObj).map((row, idx) => (
-          <div className="row-wrapper" key={idx}>
-            <Row
-              id={row.id}
-              rowData={row}
-              returnRowData={(val, id) => editRowData(val, id)}
-              deleteRow={id => deleteRow(id)}
-            />
-          </div>
-        ))}
+        <Title
+          sendTitle={(newTitle) => setScriptTitle(newTitle)}
+          titleProp={scriptTitle}
+        />
+        <DragDropContext onDragEnd={onDragEnd}>
+          {Object.values(rowObj).map((row, idx) => (
+            <div className="row-wrapper" >
+              {row.id}
+              <Row
+                key={`row${row.id}`}
+                id={row.id}
+                rowData={row}
+                returnRowData={(val, id) => editRowData(val, id)}
+                deleteRow={id => deleteRow(id)}
+              />
+            </div>
+          ))}
+        </DragDropContext>
         <div className="add-row-btn-wrapper">
           <div className="add-row-btn">
             <Fab onClick={() => addRow()}><Add /></Fab>

@@ -1,19 +1,22 @@
 import React from 'react'
-import ScriptEditor from '../ScriptEditor'
-import { Fab, Grid } from '@mui/material'
-import { Message, ScriptStore } from '../types'
+import '../App.scss'
+import { Grid } from '@mui/material'
+import { ScriptStore, Store } from '../types'
 import Project from './Project'
-import { Add, PlusOne } from '@mui/icons-material'
+import { Add, } from '@mui/icons-material'
+import { Outlet, Link } from 'react-router-dom'
+import { nanoid } from 'nanoid'
 
 export default function Home() {
   const [scripts, setScripts] = React.useState<ScriptStore[]>([])
-  const [showScript, setShowScript] = React.useState<boolean>(false)
-  const [newScript, setNewScript] = React.useState<boolean>(false)
-  const script = React.useRef<ScriptStore>([])
+  const [show, setShow] = React.useState(false)
   const load = () => {
-    const scripts = JSON.parse(localStorage.getItem('scripts') || 'false') as ScriptStore[] | boolean
-    if (typeof scripts === 'object') {
-      setScripts(scripts)
+    // const stor = localStorage.getItem('scripts')
+    // console.log("🚀 ~ file: Home.tsx:14 ~ load ~ stor:", stor)
+    const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
+    if (scripts) {
+      console.log("🚀 ~ file: Home.tsx:15 ~ load ~ scripts:", scripts)
+      setScripts(Object.values(scripts))
     }
     return false
   }
@@ -21,49 +24,43 @@ export default function Home() {
     load()
   }, [])
 
-  const navigate = (chosenScript: ScriptStore) => {
-    console.log(chosenScript)
-    script.current = chosenScript
-    setShowScript(true)
-  }
-
-  const createNewScript = () => {
-    script.current = { script: [], title: '' }
-    setShowScript(true)
-  }
-
   return (
     <>
       <div className="home-wrapper">
-        {!showScript && (
-          <>
-            <div className="title-wrapper">
-              <h1>Scripts</h1>
-            </div>
-            <div className="projects-wrapper">
-              <Grid container spacing={2}>
-                <Grid item xs={3}key='new'>
-                  <div
-                    className="project-wrapper"
-                    onClick={() => createNewScript()}
-                  >
-                    <h2 className="new-project-title">
-                      <Add />
-                    </h2>
-                  </div>
-                </Grid>
-                {scripts.map((script, idx) => (
-                  <Grid item xs={3} key={idx}>
-                    <Project script={script} navigate={(script) => navigate(script)}></Project>
-                  </Grid>
-                ))}
+        <div className="title-wrapper">
+          <h1>Scripts</h1>
+        </div>
+        <div className="projects-wrapper">
+          <Grid container spacing={2}>
+            <Grid item xs={3} key='new'>
+              <Link to={`script/new`} state={{
+                id: nanoid(5),
+                script: [],
+                title: 'Untitled Script'
+              }}>
+                <div
+                  className="project-wrapper"
+                // onClick={() => setShow(!show)}
+                >
+                  <h2 className="new-project-title">
+                    <Add />
+                  </h2>
+                </div>
+              </Link>
+            </Grid>
+            {scripts.map((script, idx) => (
+              <Grid item xs={3} key={idx}>
+                <Project script={script}></Project>
               </Grid>
-            </div>
-          </>
-        )}
-        {showScript && (
-          <ScriptEditor loadedScript={script.current} />
-        )}
+            ))}
+
+            <Grid item key='del'>
+              <div onClick={() => localStorage.clear()} className="project-wrapper">
+                delete
+              </div>
+            </Grid>
+          </Grid>
+        </div>
       </div>
     </>
   )

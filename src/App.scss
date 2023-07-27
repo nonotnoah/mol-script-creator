@@ -131,13 +131,7 @@
   justify-content: left;
   flex-flow: column;
   flex: 1;
-  // border: 1px solid red;
-  .title-wrapper {
-  display: flex;
-    // border: 1px solid red;
-  }
   .projects-wrapper {
-
   }
   .project-wrapper {
     border-radius: 10px;
@@ -146,7 +140,23 @@
     height: 100px;
     display: flex;
     justify-content: center;
-    align-items: center ;
+    align-items: center;
+  }
+}
 
+.title-wrapper {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  // border: 1px solid red;
+  .title {
+    display: flex;
+    flex: 1;
+    margin-top: 0px;
+    margin-bottom: 40px;
+    margin-left: 60px;
+    margin-right: 60px;
+    border-bottom: 1px solid black;
+    // border: 1px solid red;
   }
 }

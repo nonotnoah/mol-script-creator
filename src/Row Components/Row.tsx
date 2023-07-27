@@ -27,13 +27,12 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   // manage state for all inputs in this component
   const rowDataRef = React.useRef<RowData>({
     label: rowData.label,
-    dialogueType: 'Dialogue',
+    dialogueType: rowData.type,
     dialogue: rowData.m,
     speaker: rowData.char,
     emotion: rowData.emotion,
     position: rowData.pos,
   })
-  console.log(rowDataRef.current)
   const [rowDataState, setRowDataState] = React.useState<RowData>({ ...rowDataRef.current })
   const editRowData = (key: string, val: string) => {
     rowDataRef.current = { ...rowDataRef.current, [key]: val }
