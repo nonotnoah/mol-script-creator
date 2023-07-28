@@ -2,7 +2,7 @@ import React from 'react'
 import { ChangeProps } from '../types'
 import { TextField } from '@mui/material'
 
-export default function Label({ initVal, handleChange }: ChangeProps) {
+export default function Label({ val: initVal, handleChange }: ChangeProps) {
   return (
     <TextField
       size='small'

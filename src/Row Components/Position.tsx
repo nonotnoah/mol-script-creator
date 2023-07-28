@@ -2,7 +2,7 @@ import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { ChangeProps } from '../types'
 
-export default function Position({ initVal, handleChange }: ChangeProps) {
+export default function Position({ val: initVal, handleChange }: ChangeProps) {
   // const [positionType, setPositionType] = React.useState('left')
   return (
     <FormControl className='position-type'>

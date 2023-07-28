@@ -11,18 +11,21 @@ export default function Home() {
   const [scripts, setScripts] = React.useState<ScriptStore[]>([])
   const [show, setShow] = React.useState(false)
   const load = () => {
-    // const stor = localStorage.getItem('scripts')
-    // console.log("🚀 ~ file: Home.tsx:14 ~ load ~ stor:", stor)
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
     if (scripts) {
       console.log("🚀 ~ file: Home.tsx:15 ~ load ~ scripts:", scripts)
       setScripts(Object.values(scripts))
+      return
     }
-    return false
+    setScripts([])
   }
   React.useEffect(() => {
     load()
   }, [])
+  const clearAllScripts = () => {
+    localStorage.clear()
+    load()
+  }
 
   return (
     <>
@@ -55,7 +58,7 @@ export default function Home() {
             ))}
 
             <Grid item key='del'>
-              <div onClick={() => localStorage.clear()} className="project-wrapper">
+              <div onClick={() => clearAllScripts()} className="project-wrapper">
                 delete
               </div>
             </Grid>

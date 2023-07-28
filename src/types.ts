@@ -1,8 +1,8 @@
 export interface Message {
-  type: 'Dialogue' | 'Narrator'
+  // type: 'Dialogue' | 'Narrator'
+  type: string
   id: number
   m: string
-  q?: string
   char: string
   label: string
   next?: string
@@ -20,7 +20,7 @@ export interface ResponseType {
 }
 
 export interface ChangeProps {
-  initVal: string,
+  val: string,
   handleChange: (val: string) => void
 }
 

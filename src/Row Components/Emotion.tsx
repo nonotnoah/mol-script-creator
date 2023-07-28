@@ -4,7 +4,7 @@ import { ChangeProps } from '../types';
 
 const emotions = ['neutral', 'happy', 'sad', 'disgusted', 'angry', 'fearful', 'surprised']
 
-export default function Emotion({ initVal, handleChange }: ChangeProps) {
+export default function Emotion({ val: initVal, handleChange }: ChangeProps) {
   // const [emotionType, setEmotionType] = React.useState<string>('neutral')
   return (
     <FormControl className='emotion-type'>

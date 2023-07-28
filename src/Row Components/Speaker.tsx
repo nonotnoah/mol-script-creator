@@ -4,7 +4,7 @@ import { ChangeProps } from '../types'
 
 const defaultCharacters = ['Juice', 'Harry']
 
-export default function Speaker({ initVal, handleChange }: ChangeProps) {
+export default function Speaker({ val: initVal, handleChange }: ChangeProps) {
   const [characters, setCharacters] = React.useState(defaultCharacters)
   // const [charValue, setCharValue] = React.useState<string | null>(null)
   return (

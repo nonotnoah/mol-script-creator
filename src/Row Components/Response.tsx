@@ -31,8 +31,8 @@ export default function Response({ id, resData, returnResData, deleteRes }: ResP
           </Fab>
         </div>
         <div className="id">{`${id}.`}</div>
-        <Dialogue initVal={resData.m || ''} handleChange={(value) => setDiag(value)} />
-        <Next initVal={resData.next || ''} handleChange={(value) => setNext(value)} />
+        <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
+        <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />
         <div className="right-padding" />
       </div>
     </div>

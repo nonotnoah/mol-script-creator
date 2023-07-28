@@ -3,15 +3,12 @@ import { useState, createContext, MutableRefObject, useRef } from 'react'
 import Row from './Row Components/Row'
 import { Message, ScriptStore, Store } from './types'
 import { Button, Fab, TextField } from '@mui/material'
-import { Add, LocalConvenienceStoreOutlined, PriorityHigh, Save } from '@mui/icons-material'
+import { Add, Save } from '@mui/icons-material'
 import { useParams, useLocation } from 'react-router-dom'
 import Loading from './Loading'
 import Title from './Row Components/Title'
 import { DragDropContext, Draggable, DraggingStyle, DropResult, Droppable, NotDraggingStyle } from 'react-beautiful-dnd';
 
-// interface ScriptEditProps {
-//   loadedScript: ScriptStore,
-// }
 const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
   padding: 10,
   margin: `0 50px 15px 50px`,
@@ -22,18 +19,24 @@ const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDr
   ...draggableStyle
 })
 
+const getStateObj = (state: ScriptStore) => {
+  // reassign script ids to rowRef/Obj on load
+  const obj: { [id: number]: Message } = {}
+  for (let i = 0; i < state.script.length; i++) {
+    obj[state.script[i].id] = state.script[i]
+  }
+  return obj
+}
 function ScriptEditor() {
   const location = useLocation()
   const state = location.state as ScriptStore
 
   const scriptId = React.useRef<string>(state.id)
   const [scriptTitle, setScriptTitle] = React.useState(state.title)
-  const componentScriptData = React.useRef<Message[]>(state.script)
-  const rowRef = React.useRef<{ [id: number]: Message }>(Object.assign({}, state.script))
-  console.log('rowObj changed 31')
-  const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>(Object.assign({}, state.script))
+  const rowRef = React.useRef<{ [id: number]: Message }>(getStateObj(state))
+  const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>(getStateObj(state))
   const rowId = React.useRef(state.script.length)
-  // const { params } = useParams()
+  console.log("🚀 ~ file: ScriptEditor.tsx:31 ~ ScriptEditor ~ rowId:", rowId)
   // React.useEffect(() => {
   //   if (state) {
   //     componentScriptData.current = state.script
@@ -72,7 +75,7 @@ function ScriptEditor() {
     const newScript: ScriptStore =
     {
       id: scriptId.current,
-      script: exportScript(),
+      script: msgObjToArray(),
       title: scriptTitle
     }
     if (scripts != null) {
@@ -86,7 +89,7 @@ function ScriptEditor() {
     const updated = { [scriptId.current]: newScript }
     localStorage.setItem('scripts', JSON.stringify(updated))
   }
-  const exportScript = () => {
+  const msgObjToArray = () => {
     return Object.values(rowRef.current)
   }
   const addRow = () => {
@@ -96,35 +99,21 @@ function ScriptEditor() {
     rowRef.current[id] = newRow
     console.log('rowObj changed 99')
     setRowObj({ ...rowRef.current })
-    // componentScriptData.current = [...componentScriptData.current, { ...rowRef.current[id] }]
   }
   const editRow = (newRow: Message, id: number) => {
-    console.log(id, 'updated')
-    console.log((newRow.m || 'undef'))
+    console.log(id, 'updated', newRow)
+    console.log('ref:', rowRef.current, 'state:', rowObj)
+    // const rowIdx = Object.values(rowRef.current).find(row => row.id === id)
+    // if (rowIdx) rowRef.current[rowIdx] = newRow
     rowRef.current[id] = newRow
     console.log('rowObj changed 107')
     setRowObj({ ...rowRef.current })
-
-    // const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
-    // if (!rowInScriptObj) {
-    //   return
-    // }
-    // const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
-    // if ((rowIdx > -1) && componentScriptData.current) {
-    //   componentScriptData.current[rowIdx] = newRow
-    // }
+    console.log('ref:', rowRef.current, 'state:', rowObj)
   }
   const deleteRow = (id: number) => {
     console.log(id, 'deleted')
     delete rowRef.current[id]
-    // const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
-    // if (!rowInScriptObj) {
-    //   return
-    // }
-    // const filtered = componentScriptData.current.filter(row => row != rowInScriptObj)
-    // componentScriptData.current = filtered
     if (Object.keys(rowObj).length == 0) {
-      // componentScriptData.current = []
       console.log('rowObj changed 130')
       setRowObj({})
       return
@@ -142,10 +131,13 @@ function ScriptEditor() {
           titleProp={scriptTitle}
         />
         {Object.values(rowObj).map((row, idx) => (
-          <div className="row-wrapper" >
+          <div
+            className="row-wrapper"
+            key={`row${row.id}`}
+          >
             {row.id} {idx}
             <Row
-              key={`row${row.id}`}
+              // key={`row${row.id}`}
               id={row.id}
               rowData={row}
               returnRowData={(val, id) => editRow(val, id)}

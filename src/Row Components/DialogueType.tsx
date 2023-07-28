@@ -2,7 +2,7 @@ import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { ChangeProps } from '../types';
 
-export default function DialogueType({ initVal, handleChange }: ChangeProps) {
+export default function DialogueType({ val: initVal, handleChange }: ChangeProps) {
   const [dialogueType, setDialogueType] = React.useState<string>('Dialogue')
   return (
     <FormControl className='dialogue-type'>
