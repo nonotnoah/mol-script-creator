@@ -10,7 +10,7 @@ import Label from './Label';
 
 import { Button, Fab } from '@mui/material'
 import { Add, DeleteOutline } from '@mui/icons-material'
-import { Res, RowProps } from '../types';
+import { ResponseType, RowProps } from '../types';
 import { Message } from '../types';
 
 interface RowData {
@@ -35,82 +35,54 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   }
   const rowDataRef = React.useRef<RowData>(data)
   const [rowDataState, setRowDataState] = React.useState<RowData>(data)
-  const editRowData = (key: string, val: string) => {
-    rowDataRef.current = { ...rowDataRef.current, [key]: val }
+  const thisRowData = React.useRef<Message>({ type: 'Dialogue', id: id, m: '', res: [], char: '', label: '', emotion: '', pos: '' })
+  const editRowData = (key: keyof RowData, val: string) => {
+    rowDataRef.current[key] = val
     setRowDataState({ ...rowDataRef.current, [key]: val })
   }
 
-  const resRef = React.useRef<{ [id: number]: JSX.Element }>({})
-  const [resObj, setResObj] = React.useState<{ [id: number]: JSX.Element }>({})
-  const resId = React.useRef(0)
+  const resRef = React.useRef<ResponseType[]>(rowData.res)
+  const [resObj, setResObj] = React.useState<ResponseType[]>(rowData.res)
+  const resId = React.useRef(rowData.res.length)
+  console.log("🚀 ~ file: Row.tsx:47 ~ Row ~ resId:", resId)
   const addRes = () => {
     const id = resId.current += 1
-    const resCopy = { ...resRef.current }
-    resCopy[id] =
-      <Response
-        key={`response${resId.current}`}
-        id={resId.current}
-        resData={{ m: '', next: '' }}
-        returnResData={(val, id) => editResData(val, id)}
-        deleteRes={id => deleteRes(id)}
-      />
-    addResInRowData(id)
-    resRef.current = { ...resCopy }
-    setResObj({ ...resCopy })
+    const newRes: ResponseType = { id: id, m: '', next: '' }
+    resRef.current[id] = newRes
+    setResObj({ ...resRef.current })
+    thisRowData.current = { ...thisRowData.current, res: [...resRef.current] }
   }
-  const addResInRowData = (id: number) => {
-    thisRowData.current.res = [...thisRowData.current.res, { id: id, m: '', next: '' }]
-    // console.log("🚀 ~ file: App.tsx:43 ~ addRowInScriptData ~ componentScriptData:", componentScriptData.current)
-  }
-  const editResInRowData = (res: Res, id: number) => {
-    const resInRowObj = thisRowData.current.res?.find(res => res.id === id)
-    if (!resInRowObj) {
-      return
-    }
-    const resIdx = thisRowData.current.res?.indexOf(resInRowObj)
-    if ((resIdx > -1) && thisRowData.current.res) {
-      thisRowData.current.res[resIdx] = { id: id, m: res.m, next: res.next }
-    }
-  }
-  const deleteResInRowData = (id: number) => {
-    const resInRowObj = thisRowData.current.res?.find(res => res.id === id)
-    if (!resInRowObj) {
-      return
-    }
-    const filtered = thisRowData.current.res.filter(res => res != resInRowObj)
-    thisRowData.current.res = filtered
-  }
-  const editResData = (res: Res, id: number) => {
-    editResInRowData(res, id)
-    const resCopy = { ...resRef.current }
-    resCopy[id] =
-      <Response
-        key={`response${id}`}
-        id={id}
-        resData={{ m: res.m, next: res.next }}
-        returnResData={(val, id) => editResData(val, id)}
-        deleteRes={id => deleteRes(id)}
-      />
-    resRef.current = { ...resCopy }
-    setResObj({ ...resCopy })
-    console.log("🚀 ~ file: Row.tsx:133 ~ Row ~ rowData:", thisRowData.current)
+  const editRes = (res: ResponseType, id: number) => {
+    resRef.current[id] = res
+    setResObj({ ...resRef.current })
+
+    console.log(thisRowData.current)
+    // const resInRowObj = thisRowData.current['res'].find(res => res.id === id)
+    // if (!resInRowObj) {
+    //   return
+    // }
+    // const resIdx = thisRowData.current['res'].indexOf(resInRowObj)
+    // if ((resIdx > -1) && thisRowData.current['res']) {
+    //   thisRowData.current['res'].splice(resIdx, 1, res)
+    // }
   }
   const deleteRes = (id: number) => {
-    deleteResInRowData(id)
-    const resCopy = { ...resRef.current }
-    delete resCopy[id]
-    if (Object.keys(resRef.current).length == 0) {
-      thisRowData.current.res = []
-      resRef.current = {}
-      setResObj({})
+    delete resRef.current[id]
+    const resInRowObj = thisRowData.current['res'].find(res => res && res.id === id)
+    if (!resInRowObj) {
       return
     }
-    resRef.current = { ...resCopy }
-    // console.log("🚀 ~ file: App.tsx:95 ~ deleteRow ~ rowRef.current:", rowRef.current)
-    setResObj({ ...resCopy })
+    const filtered = thisRowData.current['res'].filter(res => res != resInRowObj)
+    thisRowData.current['res'] = filtered
+    if (Object.keys(resRef.current).length == 0) {
+      thisRowData.current.res = []
+      resRef.current = []
+      setResObj([])
+      return
+    }
+    setResObj({ ...resRef.current })
   }
 
-  const thisRowData = React.useRef<Message>({ type: 'Dialogue', id: id, m: '', res: [], char: '', label: '', emotion: '', pos: '' })
 
   React.useEffect(() => {
     if (rowDataState.dialogueType == 'Narrator') {
@@ -124,8 +96,8 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
         res: [],
         pos: ''
       }
-      resRef.current = {}
-      setResObj({})
+      resRef.current = []
+      setResObj([])
     }
     if (rowDataState.dialogueType == 'Dialogue') {
       thisRowData.current = {
@@ -165,7 +137,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
               <Fab
                 className='add-res-btn hide'
                 size='small'
-                onClick={() => addRes()}
+                // onClick={() => addRes()}
               ><Add /></Fab>
             </div>
           </>
@@ -174,13 +146,19 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
           < div className="add-res-btn-wrapper" />
         )}
       </div >
-      {(rowDataState.dialogueType == 'Dialogue') && (
+      {/* {(rowDataState.dialogueType == 'Dialogue') && (
         <>
           {Object.values(resObj).map(res => (
-            res
+            <Response
+              key={`response${resId.current}`}
+              id={resId.current}
+              resData={res}
+              returnResData={(val, id) => editRes(val, id)}
+              deleteRes={id => deleteRes(id)}
+            />
           ))}
         </>
-      )}
+      )} */}
     </>
   )
 }

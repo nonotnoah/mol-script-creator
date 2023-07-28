@@ -1,19 +1,20 @@
 import React from 'react'
-import { Button, Fab, TextField } from '@mui/material'
-import { DeleteForeverOutlined, DeleteOutline } from '@mui/icons-material'
-import { ChangeProps, Res, ResProps } from '../types'
+import { Fab, } from '@mui/material'
+import { DeleteOutline } from '@mui/icons-material'
+import { ResProps, ResponseType } from '../types'
 import Dialogue from './Dialogue'
 import Next from './Next'
 import Label from './Label'
 
 export default function Response({ id, resData, returnResData, deleteRes }: ResProps) {
-  const [diag, setDiag] = React.useState<string>(resData.m)
-  const [next, setNext] = React.useState<string>(resData.next)
+  const [diag, setDiag] = React.useState<string>(resData.m || '')
+  const [next, setNext] = React.useState<string>(resData.next || '')
 
-  const componentResData = React.useRef<Res>()
+  const componentResData = React.useRef<ResponseType>()
 
   React.useEffect(() => {
     componentResData.current = {
+      id: resData.id,
       m: diag,
       next: next,
     }
@@ -30,8 +31,8 @@ export default function Response({ id, resData, returnResData, deleteRes }: ResP
           </Fab>
         </div>
         <div className="id">{`${id}.`}</div>
-        <Dialogue handleChange={(value) => setDiag(value)} />
-        <Next handleChange={(value) => setNext(value)} />
+        <Dialogue initVal={resData.m || ''} handleChange={(value) => setDiag(value)} />
+        <Next initVal={resData.next || ''} handleChange={(value) => setNext(value)} />
         <div className="right-padding" />
       </div>
     </div>

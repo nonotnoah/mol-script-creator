@@ -6,15 +6,17 @@ export interface Message {
   char: string
   label: string
   next?: string
-  res: {
-    id: number
-    m: string
-    level?: number // only show if player meets compatability req
-    next: string
-  }[]
+  res: ResponseType[]
   emotion: string
   location?: string
   pos: string
+}
+
+export interface ResponseType {
+  id: number
+  m: string
+  level?: number // only show if player meets compatability req
+  next: string
 }
 
 export interface ChangeProps {
@@ -22,16 +24,10 @@ export interface ChangeProps {
   handleChange: (val: string) => void
 }
 
-export interface Res {
-  m: string
-  level?: number // only show if player meets compatability req
-  next: string
-}
-
 export interface ResProps {
-  resData: { m: string, next: string }
+  resData: ResponseType
   id: number
-  returnResData: (res: Res, id: number) => void
+  returnResData: (res: ResponseType, id: number) => void
   deleteRes: (id: number) => void
 }
 

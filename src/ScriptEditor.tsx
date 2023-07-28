@@ -28,7 +28,6 @@ function ScriptEditor() {
 
   const scriptId = React.useRef<string>(state.id)
   const [scriptTitle, setScriptTitle] = React.useState(state.title)
-  // const scriptTitle = React.useRef('Untitled Script')
   const componentScriptData = React.useRef<Message[]>(state.script)
   const rowRef = React.useRef<{ [id: number]: Message }>(Object.assign({}, state.script))
   console.log('rowObj changed 31')
@@ -70,28 +69,25 @@ function ScriptEditor() {
   const save = () => {
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
     console.log("🚀 ~ file: ScriptEditor.tsx:42 ~ save ~ scripts:", scripts)
+    const newScript: ScriptStore =
+    {
+      id: scriptId.current,
+      script: exportScript(),
+      title: scriptTitle
+    }
     if (scripts != null) {
       console.log('scripts exist, saving over top')
-      const newScript: ScriptStore =
-      {
-        id: scriptId.current,
-        script: componentScriptData.current,
-        title: scriptTitle
-      }
       console.log("🚀 ~ file: ScriptEditor.tsx:68 ~ save ~ newScript:", newScript)
       const updated = { ...scripts, [scriptId.current]: newScript }
       localStorage.setItem('scripts', JSON.stringify(updated))
       return
     }
     console.log('starting new store')
-    const newScript: ScriptStore =
-    {
-      id: scriptId.current,
-      script: componentScriptData.current,
-      title: scriptTitle
-    }
     const updated = { [scriptId.current]: newScript }
     localStorage.setItem('scripts', JSON.stringify(updated))
+  }
+  const exportScript = () => {
+    return Object.values(rowRef.current)
   }
   const addRow = () => {
     const id = rowId.current += 1
@@ -100,35 +96,35 @@ function ScriptEditor() {
     rowRef.current[id] = newRow
     console.log('rowObj changed 99')
     setRowObj({ ...rowRef.current })
-    componentScriptData.current = [...componentScriptData.current, { ...rowRef.current[id] }]
+    // componentScriptData.current = [...componentScriptData.current, { ...rowRef.current[id] }]
   }
-  const editRowData = (newRow: Message, id: number) => {
+  const editRow = (newRow: Message, id: number) => {
     console.log(id, 'updated')
     console.log((newRow.m || 'undef'))
     rowRef.current[id] = newRow
     console.log('rowObj changed 107')
     setRowObj({ ...rowRef.current })
 
-    const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
-    if (!rowInScriptObj) {
-      return
-    }
-    const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
-    if ((rowIdx > -1) && componentScriptData.current) {
-      componentScriptData.current[rowIdx] = newRow
-    }
+    // const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
+    // if (!rowInScriptObj) {
+    //   return
+    // }
+    // const rowIdx = componentScriptData.current.indexOf(rowInScriptObj)
+    // if ((rowIdx > -1) && componentScriptData.current) {
+    //   componentScriptData.current[rowIdx] = newRow
+    // }
   }
   const deleteRow = (id: number) => {
     console.log(id, 'deleted')
     delete rowRef.current[id]
-    const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
-    if (!rowInScriptObj) {
-      return
-    }
-    const filtered = componentScriptData.current.filter(row => row != rowInScriptObj)
-    componentScriptData.current = filtered
+    // const rowInScriptObj = componentScriptData.current.find(row => row.id === id)
+    // if (!rowInScriptObj) {
+    //   return
+    // }
+    // const filtered = componentScriptData.current.filter(row => row != rowInScriptObj)
+    // componentScriptData.current = filtered
     if (Object.keys(rowObj).length == 0) {
-      componentScriptData.current = []
+      // componentScriptData.current = []
       console.log('rowObj changed 130')
       setRowObj({})
       return
@@ -145,37 +141,18 @@ function ScriptEditor() {
           sendTitle={(newTitle) => setScriptTitle(newTitle)}
           titleProp={scriptTitle}
         />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId='scriptRows'>
-            {(provided) => (
-              <div className="scriptRowDroppable" {...provided.droppableProps} ref={provided.innerRef}>
-                {Object.values(rowObj).map((row, idx) => (
-                  <Draggable key={row.id} draggableId={row.id.toString()} index={idx}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                      >
-                        <div className="row-wrapper" >
-                          {row.id} {idx}
-                          <Row
-                            key={`row${row.id}`}
-                            id={row.id}
-                            rowData={row}
-                            returnRowData={(val, id) => editRowData(val, id)}
-                            deleteRow={id => deleteRow(id)}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        {Object.values(rowObj).map((row, idx) => (
+          <div className="row-wrapper" >
+            {row.id} {idx}
+            <Row
+              key={`row${row.id}`}
+              id={row.id}
+              rowData={row}
+              returnRowData={(val, id) => editRow(val, id)}
+              deleteRow={id => deleteRow(id)}
+            />
+          </div>
+        ))}
         <div className="add-row-btn-wrapper">
           <div className="add-row-btn">
             <Fab onClick={() => addRow()}><Add /></Fab>
