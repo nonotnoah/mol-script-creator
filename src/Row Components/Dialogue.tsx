@@ -26,7 +26,7 @@ export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
           </InputAdornment>
         )
       }}
-      defaultValue={initVal}
+      value={initVal}
     />
   )
 }

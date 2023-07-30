@@ -35,10 +35,15 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
   };
   const handleCloseWithSaving = () => {
     setOpen(false);
-    sendInfo(temp.current);
-    setInfo({ ...temp.current })
+    sendInfo(info);
+    temp.current = { ...info }
+    // setInfo({ ...temp.current })
   }
-  const handleCloseWithoutSaving = () => { setOpen(false); setInfo(why2) };
+  const handleCloseWithoutSaving = () => {
+    console.log('without saving')
+    setOpen(false);
+    setInfo({ ...temp.current })
+  };
   const temp = React.useRef<InfoType>(infoProp)
   const [info, setInfo] = React.useState<InfoType>(infoProp)
   const why2 = infoProp
@@ -59,20 +64,62 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
             <h2 style={{ marginTop: 0 }}>Script Info</h2>
             <div className="info-fields-wrapper" >
               <div className="info-field">
-                <TextField sx={{ width: 300 }} defaultValue={info.title} onChange={e => temp.current.title = e.target.value} label='Change Title'></TextField>
+                <TextField
+                  sx={{ width: 300 }}
+                  value={info.title}
+                  onChange={e => {
+                    // temp.current.title = e.target.value;
+                    setInfo({ ...info, title: e.target.value })
+                  }}
+                  label='Change Title'></TextField>
               </div>
               <div className="info-field">
-                <TextField multiline sx={{ width: 300 }} defaultValue={info.description} onChange={e => temp.current.description = e.target.value} label='Description'></TextField>
+                <TextField multiline
+                  sx={{ width: 300 }}
+                  value={info.description}
+                  onChange={e => {
+                    // temp.current.description = e.target.value;
+                    setInfo({ ...info, description: e.target.value })
+                  }}
+                  label='Description'></TextField>
               </div>
               <div className="info-field">
-                <TextField sx={{ width: 300 }} defaultValue={info.characters} onChange={e => temp.current.characters = e.target.value.split(',')} label='Characters (comma separated)'></TextField>
+                <TextField
+                  sx={{ width: 300 }}
+                  value={info.characters}
+                  onChange={e => {
+                    // temp.current.characters = e.target.value.split(',');
+                    setInfo({ ...info, characters: e.target.value.split(',') })
+                  }}
+                  label='Characters (comma separated)'></TextField>
               </div>
               <div className="info-field">
-                <TextField sx={{ width: 300 }} defaultValue={info.locations} onChange={e => temp.current.locations = e.target.value.split(',')} label='Locations (comma separated)'></TextField>
+                <TextField
+                  sx={{ width: 300 }}
+                  value={info.locations}
+                  onChange={e => {
+                    // temp.current.locations = e.target.value.split(',');
+                    setInfo({ ...info, locations: e.target.value.split(',') })
+                  }}
+                  label='Locations (comma separated)'></TextField>
               </div>
               <div className="info-field time-wrapper">
-                <TextField sx={{ width: 135 }} defaultValue={info.start} type='number' onChange={e => temp.current.start = parseInt(e.target.value)} label='Start Time (24h)'></TextField>
-                <TextField sx={{ width: 135 }} defaultValue={info.end} type='number' onChange={e => temp.current.end = parseInt(e.target.value)} label='End Time (24h)'></TextField>
+                <TextField
+                  sx={{ width: 135 }}
+                  value={info.start} type='number'
+                  onChange={e => {
+                    // temp.current.start = parseInt(e.target.value);
+                    setInfo({ ...info, start: parseInt(e.target.value) })
+                  }}
+                  label='Start Time (24h)'></TextField>
+                <TextField
+                  sx={{ width: 135 }}
+                  value={info.end} type='number'
+                  onChange={e => {
+                    // temp.current.end = parseInt(e.target.value);
+                    setInfo({ ...info, end: parseInt(e.target.value) })
+                  }}
+                  label='End Time (24h)'></TextField>
               </div>
             </div>
             <div className="change-btn-wrapper">
