@@ -11,7 +11,7 @@ export default function Label({ val: initVal, handleChange }: ChangeProps) {
       onChange={(event) => {
         handleChange(event.target.value)
       }}
-      value={initVal}
+      defaultValue={initVal}
     />
   )
 }

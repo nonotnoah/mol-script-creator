@@ -1,12 +1,12 @@
 import React, { Suspense } from 'react'
 import { useState, createContext, MutableRefObject, useRef } from 'react'
 import Row from './Row Components/Row'
-import { Message, ScriptStore, Store } from './types'
+import { InfoType, Message, ScriptStore, Store } from './types'
 import { Button, Fab, TextField } from '@mui/material'
-import { Add, Save } from '@mui/icons-material'
+import { Add, Download, ImportExport, Save } from '@mui/icons-material'
 import { useParams, useLocation } from 'react-router-dom'
 import Loading from './Loading'
-import Title from './Row Components/Title'
+import Info from './Row Components/Info'
 import { DragDropContext, Draggable, DraggingStyle, DropResult, Droppable, NotDraggingStyle } from 'react-beautiful-dnd';
 
 const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
@@ -27,12 +27,13 @@ const getStateObj = (state: ScriptStore) => {
   }
   return obj
 }
+
 function ScriptEditor() {
   const location = useLocation()
   const state = location.state as ScriptStore
 
   const scriptId = React.useRef<string>(state.id)
-  const [scriptTitle, setScriptTitle] = React.useState(state.title)
+  const [info, setInfo] = React.useState<InfoType>(state.info || { title: 'Untitled Script', description: '', characters: [], locations: [], start: 700, end: 2300 })
   const rowRef = React.useRef<{ [id: number]: Message }>(getStateObj(state))
   const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>(getStateObj(state))
   const rowId = React.useRef(state.script.length)
@@ -76,7 +77,7 @@ function ScriptEditor() {
     {
       id: scriptId.current,
       script: msgObjToArray(),
-      title: scriptTitle
+      info: info
     }
     if (scripts != null) {
       console.log('scripts exist, saving over top')
@@ -126,16 +127,28 @@ function ScriptEditor() {
   return (
     <>
       <div className="wrapper">
-        <Title
-          sendTitle={(newTitle) => setScriptTitle(newTitle)}
-          titleProp={scriptTitle}
-        />
+        <div className="title-wrapper" >
+          <Info
+            sendInfo={(info) => setInfo(info)}
+            infoProp={info}
+          />
+          <div className="save-script-btn-wrapper">
+            <div className="save-script-btn">
+              <Fab onClick={() => save()}><Save /></Fab>
+            </div>
+          </div>
+          <div className="export-script-btn-wrapper">
+            <div className="export-script-btn">
+              <Fab onClick={() => exportScript()}><Download /></Fab>
+            </div>
+          </div>
+        </div>
         {Object.values(rowObj).map((row, idx) => (
           <div
             className="row-wrapper"
             key={`row${row.id}`}
           >
-            {row.id} {idx}
+            {/* {row.id} {idx} */}
             <Row
               // key={`row${row.id}`}
               id={row.id}
@@ -148,11 +161,6 @@ function ScriptEditor() {
         <div className="add-row-btn-wrapper">
           <div className="add-row-btn">
             <Fab onClick={() => addRow()}><Add /></Fab>
-          </div>
-        </div>
-        <div className="save-script-btn-wrapper">
-          <div className="save-script-btn">
-            <Fab onClick={() => save()}><Save /></Fab>
           </div>
         </div>
       </div>

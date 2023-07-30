@@ -44,8 +44,16 @@ export interface RowProps {
 export interface ScriptStore {
   id: string
   script: Message[]
-  title: string
+  info: InfoType
 }
 export interface Store {
   [key: string]: ScriptStore
+}
+export interface InfoType {
+  title: string
+  description: string
+  start: number
+  end: number
+  characters: string[]
+  locations: string[]
 }

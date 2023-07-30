@@ -30,7 +30,7 @@ export default function Response({ id, resData, returnResData, deleteRes }: ResP
             <DeleteOutline color='error' />
           </Fab>
         </div>
-        <div className="id">{`${id}.`}</div>
+        {/* <div className="id">{`${id}.`}</div> */}
         <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
         <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />
         <div className="right-padding" />
