@@ -2,7 +2,7 @@ import React from 'react'
 import { ChangeProps } from '../types'
 import { TextField } from '@mui/material'
 
-export default function Next({ handleChange }: ChangeProps) {
+export default function Next({ val, handleChange }: ChangeProps) {
   return (
     <TextField
       size='small'
@@ -11,6 +11,7 @@ export default function Next({ handleChange }: ChangeProps) {
       onChange={(event) => {
         handleChange(event.target.value)
       }}
+      value={val}
     />
   )
 }

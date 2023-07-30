@@ -8,11 +8,14 @@ export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
   const handleRemainingCharacters = (current: number) => {
     setRemainingCharacters(maxLength - current)
   }
+  const [multi, setMulti] = React.useState(false)
+  const expand = () => setMulti(true)
+  const shrink = () => setMulti(false)
   return (
 
     <TextField
-    size='small'
-    label='Dialogue'
+      size='small'
+      label='Dialogue'
       className='dialogue-input'
       inputProps={{ maxLength: maxLength }}
       onChange={(event) => {
@@ -27,6 +30,13 @@ export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
         )
       }}
       value={initVal}
+      onFocus={e => {
+        setMulti(true)
+        e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)
+      }}
+      onBlur={shrink}
+      multiline={multi}
+      autoFocus={multi}
     />
   )
 }

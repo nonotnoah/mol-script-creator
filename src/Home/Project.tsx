@@ -13,13 +13,13 @@ export default function Project({ script }: ProjectProps) {
       state={{
         id: script.id,
         script: script.script,
-        title: script.title
+        info: { ...script.info }
       }}>
       <div
         className="project-wrapper"
       >
         <h2 className="project-title">
-          title: {script.title}
+          title: {script.info.title}
         </h2>
       </div>
     </Link>
