@@ -22,6 +22,15 @@ interface RowData {
   position: string
 }
 
+const getResObj = (res: ResponseType[]) => {
+  // implement
+  // reassign script ids to rowRef/Obj on load
+  const obj: { [id: number]: ResponseType } = {}
+  for (let i = 0; i < res.length; i++) {
+    obj[res[i].id] = res[i]
+  }
+  return obj
+}
 export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
   console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   // manage state for all inputs in this component
@@ -35,54 +44,40 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   }
   const rowDataRef = React.useRef<Message>(rowData)
   const [rowDataState, setRowDataState] = React.useState<Message>(rowData)
-  // const thisRowData = React.useRef<Message>({ type: 'Dialogue', id: id, m: '', res: [], char: '', label: '', emotion: '', pos: '' })
   const editRowData = (key: keyof Message, val: never) => {
-      rowDataRef.current[key] = val
-      setRowDataState({ ...rowDataRef.current })
-      returnRowData(rowDataRef.current, id)
-      console.log('updated', key, 'to', val)
+    rowDataRef.current[key] = val
+    setRowDataState({ ...rowDataRef.current })
+    returnRowData(rowDataRef.current, id)
+    console.log('updated', key, 'to', val)
   }
 
-  const resRef = React.useRef<ResponseType[]>(rowData.res)
-  const [resObj, setResObj] = React.useState<ResponseType[]>(rowData.res)
+  const resRef = React.useRef<{ [id: number]: ResponseType }>(getResObj(rowData.res))
+  const [resObj, setResObj] = React.useState<{ [id: number]: ResponseType }>(getResObj(rowData.res))
   const resId = React.useRef(rowData.res.length)
-  // console.log("🚀 ~ file: Row.tsx:47 ~ Row ~ resId:", resId)
+
   const addRes = () => {
     const id = resId.current += 1
     const newRes: ResponseType = { id: id, m: '', next: '' }
+    console.log("🚀 ~ file: Row.tsx:61 ~ addRes ~ resId.current:", resId.current)
     resRef.current[id] = newRes
     setResObj({ ...resRef.current })
-    // thisRowData.current = { ...thisRowData.current, res: [...resRef.current] }
+    rowDataRef.current['res'] = [...Object.values(resRef.current)]
   }
   const editRes = (res: ResponseType, id: number) => {
     resRef.current[id] = res
     setResObj({ ...resRef.current })
-
-    // console.log(thisRowData.current)
-    // const resInRowObj = thisRowData.current['res'].find(res => res.id === id)
-    // if (!resInRowObj) {
-    //   return
-    // }
-    // const resIdx = thisRowData.current['res'].indexOf(resInRowObj)
-    // if ((resIdx > -1) && thisRowData.current['res']) {
-    //   thisRowData.current['res'].splice(resIdx, 1, res)
-    // }
+    rowDataRef.current['res'] = [...Object.values(resRef.current)]
   }
   const deleteRes = (id: number) => {
     delete resRef.current[id]
-    // const resInRowObj = thisRowData.current['res'].find(res => res && res.id === id)
-    // if (!resInRowObj) {
-    //   return
-    // }
-    // const filtered = thisRowData.current['res'].filter(res => res != resInRowObj)
-    // thisRowData.current['res'] = filtered
     if (Object.keys(resRef.current).length == 0) {
-      // thisRowData.current.res = []
-      resRef.current = []
-      setResObj([])
+      resRef.current = {}
+      setResObj({})
+      rowDataRef.current['res'] = []
       return
     }
     setResObj({ ...resRef.current })
+    rowDataRef.current['res'] = [...Object.values(resRef.current)]
   }
 
 
@@ -139,7 +134,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
               <Fab
                 className='add-res-btn hide'
                 size='small'
-              // onClick={() => addRes()}
+                onClick={() => addRes()}
               ><Add /></Fab>
             </div>
           </>
@@ -148,19 +143,19 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
           < div className="add-res-btn-wrapper" />
         )}
       </div >
-      {/* {(rowDataState.dialogueType == 'Dialogue') && (
+      {(rowDataState.type == 'Dialogue') && (
         <>
           {Object.values(resObj).map(res => (
             <Response
-              key={`response${resId.current}`}
-              id={resId.current}
+              key={`response${res.id}`}
+              id={res.id}
               resData={res}
               returnResData={(val, id) => editRes(val, id)}
               deleteRes={id => deleteRes(id)}
             />
           ))}
         </>
-      )} */}
+      )}
     </>
   )
 }
