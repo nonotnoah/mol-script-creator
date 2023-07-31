@@ -34,8 +34,8 @@ function ScriptEditor() {
 
   const scriptId = React.useRef<string>(state.id)
   const [info, setInfo] = React.useState<InfoType>(state.info)
-  const rowRef = React.useRef<{ [id: number]: Message }>(getStateObj(state))
-  const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>(getStateObj(state))
+  const rowRef = React.useRef<Message[]>(state.script)
+  const [rowObj, setRowObj] = React.useState<Message[]>(state.script)
   const rowId = React.useRef(state.script.length)
   console.log("🚀 ~ file: ScriptEditor.tsx:31 ~ ScriptEditor ~ rowId:", rowId)
   // React.useEffect(() => {
@@ -55,19 +55,23 @@ function ScriptEditor() {
   //   console.log()
   // }, [rowObj])
 
-  const onDragEnd = (result: DropResult) => {
+  const handleOnDragEnd = (result: DropResult) => {
     const source = result.source
     const destination = result.destination
     if (!destination) return
 
-    const items = Array.from(componentScriptData.current)
+    const items = Array.from(Object.values(rowObj))
     const [newOrder] = items.splice(source.index, 1)
     items.splice(destination.index, 0, newOrder)
-    const newObj = Object.assign({}, items)
-    rowRef.current = newObj
+
+    // const newObj: { [id: number]: Message } = {}
+    // for (let i = 0; i < items.length; i++) {
+    //   newObj[items[i].id] = items[i]
+    // }
+    // const newObj = Object.assign({}, items)
+    rowRef.current = items
     console.log('rowObj changed 63')
-    setRowObj(newObj)
-    componentScriptData.current = Object.values(newObj)
+    setRowObj(items)
   }
 
   const save = () => {
@@ -76,7 +80,7 @@ function ScriptEditor() {
     const newScript: ScriptStore =
     {
       id: scriptId.current,
-      script: msgObjToArray(),
+      script: rowRef.current,
       info: info
     }
     if (scripts != null) {
@@ -89,9 +93,6 @@ function ScriptEditor() {
     console.log('starting new store')
     const updated = { [scriptId.current]: newScript }
     localStorage.setItem('scripts', JSON.stringify(updated))
-  }
-  const msgObjToArray = () => {
-    return Object.values(rowRef.current)
   }
   const addRow = () => {
     const id = rowId.current += 1
@@ -107,30 +108,30 @@ function ScriptEditor() {
       char: '',
       location: ''
     }
-    rowRef.current[id] = newRow
+    rowRef.current.push(newRow)
     console.log('rowObj changed 99')
-    setRowObj({ ...rowRef.current })
+    setRowObj([...rowRef.current])
   }
   const editRow = (newRow: Message, id: number) => {
     console.log(id, 'updated', newRow)
     console.log('ref:', rowRef.current, 'state:', rowObj)
-    // const rowIdx = Object.values(rowRef.current).find(row => row.id === id)
-    // if (rowIdx) rowRef.current[rowIdx] = newRow
-    rowRef.current[id] = newRow
-    console.log('rowObj changed 107')
+    const rowIdx = rowRef.current.findIndex(row => row.id === id)
+    if (rowIdx) rowRef.current.splice(rowIdx, 1, newRow)
     // setRowObj({ ...rowRef.current })
+    console.log('rowObj changed 107')
     console.log('ref:', rowRef.current, 'state:', rowObj)
   }
   const deleteRow = (id: number) => {
     console.log(id, 'deleted')
-    delete rowRef.current[id]
+    const rowIdx = rowRef.current.findIndex(row => row.id === id)
+    if (rowIdx) rowRef.current.splice(rowIdx, 1)
     if (Object.keys(rowObj).length == 0) {
       console.log('rowObj changed 130')
-      setRowObj({})
+      setRowObj([])
       return
     }
     console.log('rowObj changed 134')
-    setRowObj({ ...rowRef.current })
+    setRowObj([...rowRef.current])
   }
 
 
@@ -153,23 +154,50 @@ function ScriptEditor() {
             </div>
           </div>
         </div>
-        {Object.values(rowObj).map((row, idx) => (
-          <div
-            className="row-wrapper"
-            key={`row${row.id}`}
-          >
-            {/* {row.id} {idx} */}
-            <Row
-              // key={`row${row.id}`}
-              id={row.id}
-              rowData={row}
-              characters={info.characters}
-              locations={info.locations}
-              returnRowData={(val, id) => editRow(val, id)}
-              deleteRow={id => deleteRow(id)}
-            />
-          </div>
-        ))}
+
+        <DragDropContext
+          onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId='rows'>
+            {(provided) => (
+              <div
+                className="rows"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {
+                  Object.values(rowObj).map((row, idx) => (
+                    <Draggable
+                      key={`row${row.id}`}
+                      draggableId={row.id.toString()}
+                      index={idx}
+                    >
+                      {(provided) => (
+                        <div className="row-wrapper"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          {/* {row.id} {idx} */}
+                          <Row
+                            // key={`row${row.id}`}
+                            id={row.id}
+                            rowData={row}
+                            characters={info.characters}
+                            locations={info.locations}
+                            returnRowData={(val, id) => editRow(val, id)}
+                            deleteRow={id => deleteRow(id)}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                }
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
         <div className="add-row-btn-wrapper">
           <div className="add-row-btn">
             <Fab onClick={() => addRow()}><Add /></Fab>
