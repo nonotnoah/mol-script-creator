@@ -105,7 +105,7 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
               </div>
               <div className="info-field time-wrapper">
                 <TextField
-                  sx={{ width: 135 }}
+                  sx={{ width: 145 }}
                   value={info.start} type='number'
                   onChange={e => {
                     // temp.current.start = parseInt(e.target.value);
@@ -113,7 +113,7 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
                   }}
                   label='Start Time (24h)'></TextField>
                 <TextField
-                  sx={{ width: 135 }}
+                  sx={{ width: 145 }}
                   value={info.end} type='number'
                   onChange={e => {
                     // temp.current.end = parseInt(e.target.value);

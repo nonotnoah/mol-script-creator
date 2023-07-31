@@ -7,6 +7,7 @@ import Emotion from './Emotion';
 import Position from './Position';
 import Response from './Response';
 import Label from './Label';
+import Location from './Location';
 
 import { Button, Fab } from '@mui/material'
 import { Add, DeleteOutline } from '@mui/icons-material'
@@ -31,7 +32,7 @@ const getResObj = (res: ResponseType[]) => {
   }
   return obj
 }
-export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps) {
+export default function Row({ rowData, id, returnRowData, deleteRow, characters, locations }: RowProps) {
   console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   // manage state for all inputs in this component
   const data = {
@@ -44,8 +45,8 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
   }
   const rowDataRef = React.useRef<Message>(rowData)
   const [rowDataState, setRowDataState] = React.useState<Message>(rowData)
-  const editRowData = (key: keyof Message, val: never) => {
-    rowDataRef.current[key] = val
+  const editRowData = (key: keyof Message, val: string | number) => {
+    rowDataRef.current[key] = val as never // what the fuck
     setRowDataState({ ...rowDataRef.current })
     returnRowData(rowDataRef.current, id)
     console.log('updated', key, 'to', val)
@@ -122,22 +123,25 @@ export default function Row({ rowData, id, returnRowData, deleteRow }: RowProps)
             <DeleteOutline color='error' />
           </Fab>
         </div>
-        <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
         <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
         <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
         {(rowDataState.type == 'Dialogue') && (
           <>
-            <Speaker val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+            <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
             <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
             <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
-            <div className="add-res-btn-wrapper ">
-              <Fab
-                className='add-res-btn hide'
-                size='small'
-                onClick={() => addRes()}
-              ><Add /></Fab>
-            </div>
           </>
+        )}
+            <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
+            <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+        {(rowDataState.type == 'Dialogue') && (
+          <div className="add-res-btn-wrapper ">
+            <Fab
+              className='add-res-btn hide'
+              size='small'
+              onClick={() => addRes()}
+            ><Add /></Fab>
+          </div>
         )}
         {(rowDataState.type == 'Narrator') && (
           < div className="add-res-btn-wrapper" />

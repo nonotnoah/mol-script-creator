@@ -3,7 +3,7 @@ import { TextField, InputAdornment } from '@mui/material'
 const maxLength = 100
 import { ChangeProps } from '../types';
 
-export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
+export default function Dialogue({ val, handleChange }: ChangeProps) {
   const [remainingCharacters, setRemainingCharacters] = React.useState<number>(maxLength)
   const handleRemainingCharacters = (current: number) => {
     setRemainingCharacters(maxLength - current)
@@ -29,7 +29,7 @@ export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
           </InputAdornment>
         )
       }}
-      value={initVal}
+      value={val}
       onFocus={e => {
         setMulti(true)
         e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)
@@ -37,6 +37,8 @@ export default function Dialogue({ val: initVal, handleChange }: ChangeProps) {
       onBlur={shrink}
       multiline={multi}
       autoFocus={multi}
+      // error={val ? false : true}
+      // required
     />
   )
 }

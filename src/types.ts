@@ -8,7 +8,7 @@ export interface Message {
   next?: string
   res: ResponseType[]
   emotion: string
-  location?: string
+  location: string
   pos: string
 }
 
@@ -39,6 +39,8 @@ export interface RowProps {
   id: number
   returnRowData: (row: Message, id: number) => void
   deleteRow: (id: number) => void
+  characters: string[]
+  locations: string[]
 }
 
 export interface ScriptStore {

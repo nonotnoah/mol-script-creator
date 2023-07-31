@@ -59,13 +59,16 @@
       flex: 1;
     }
     .speakerOptionWrapper {
-      width: 12%;
+      width: 10%;
     }
     .emotion-type {
       width: 10%;
     }
     .position-type {
       width: 7.5%;
+    }
+    .location-type {
+      width: 10%;
     }
   }
   .response {
@@ -76,7 +79,7 @@
     // margin-top: -10px;
     // margin-left: 16%;
     .left-padding {
-      width: 16%;
+      width: 10%;
     }
     .id {
       position: absolute;
@@ -86,10 +89,10 @@
       flex: 1;
     }
     .next-input {
-      width: 12%;
+      width: 10%;
     }
     .right-padding {
-      width: calc(7.5% + 60px + 10%);
+      width: calc(43.5% - 60px);
     }
     .delete-wrapper {
       width: 7.5%;

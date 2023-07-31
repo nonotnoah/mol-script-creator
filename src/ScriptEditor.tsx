@@ -33,7 +33,7 @@ function ScriptEditor() {
   const state = location.state as ScriptStore
 
   const scriptId = React.useRef<string>(state.id)
-  const [info, setInfo] = React.useState<InfoType>(state.info || { title: 'Untitled Script', description: '', characters: [], locations: [], start: 700, end: 2300 })
+  const [info, setInfo] = React.useState<InfoType>(state.info)
   const rowRef = React.useRef<{ [id: number]: Message }>(getStateObj(state))
   const [rowObj, setRowObj] = React.useState<{ [id: number]: Message }>(getStateObj(state))
   const rowId = React.useRef(state.script.length)
@@ -96,7 +96,17 @@ function ScriptEditor() {
   const addRow = () => {
     const id = rowId.current += 1
     console.log(id, 'added')
-    const newRow: Message = { type: 'Dialogue', id: id, m: '', res: [], label: '', emotion: 'neutral', pos: 'left', char: '' }
+    const newRow: Message = {
+      type: 'Dialogue',
+      id: id,
+      m: '',
+      res: [],
+      label: '',
+      emotion: 'neutral',
+      pos: 'left',
+      char: '',
+      location: ''
+    }
     rowRef.current[id] = newRow
     console.log('rowObj changed 99')
     setRowObj({ ...rowRef.current })
@@ -108,7 +118,7 @@ function ScriptEditor() {
     // if (rowIdx) rowRef.current[rowIdx] = newRow
     rowRef.current[id] = newRow
     console.log('rowObj changed 107')
-    setRowObj({ ...rowRef.current })
+    // setRowObj({ ...rowRef.current })
     console.log('ref:', rowRef.current, 'state:', rowObj)
   }
   const deleteRow = (id: number) => {
@@ -153,6 +163,8 @@ function ScriptEditor() {
               // key={`row${row.id}`}
               id={row.id}
               rowData={row}
+              characters={info.characters}
+              locations={info.locations}
               returnRowData={(val, id) => editRow(val, id)}
               deleteRow={id => deleteRow(id)}
             />

@@ -5,7 +5,7 @@ import { ChangeProps } from '../types'
 export default function Position({ val: initVal, handleChange }: ChangeProps) {
   // const [positionType, setPositionType] = React.useState('left')
   return (
-    <FormControl className='position-type'>
+    <FormControl size='small' className='position-type'>
       <InputLabel id="position-type">Position</InputLabel>
       <Select
         size='small'
@@ -17,7 +17,7 @@ export default function Position({ val: initVal, handleChange }: ChangeProps) {
           // setPositionType(event.target.value)
           handleChange(event.target.value)
         }}
-        // defaultValue={initVal}
+      // defaultValue={initVal}
       >
         <MenuItem value="left">Left</MenuItem>
         <MenuItem value="right">Right</MenuItem>
