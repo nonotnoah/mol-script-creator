@@ -4,7 +4,6 @@ import { DeleteOutline } from '@mui/icons-material'
 import { ResProps, ResponseType } from '../types'
 import Dialogue from './Dialogue'
 import Next from './Next'
-import Label from './Label'
 
 export default function Response({ id, resData, returnResData, deleteRes }: ResProps) {
   const [diag, setDiag] = React.useState<string>(resData.m || '')
@@ -19,12 +18,11 @@ export default function Response({ id, resData, returnResData, deleteRes }: ResP
       next: next,
     }
     returnResData(componentResData.current, id)
-  }, [diag, next])
+  }, [diag, next, id, resData.id, returnResData])
 
   return (
     <div className="row">
       <div className='response'>
-        {/* <div className="id">{`${id}.`}</div> */}
         <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
         <div className="res-spacer"></div>
         <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />

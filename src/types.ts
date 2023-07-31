@@ -31,9 +31,6 @@ export interface ResProps {
   deleteRes: (id: number) => void
 }
 
-interface RowWithId extends Message {
-  id: number
-}
 export interface RowProps {
   rowData: Message
   id: number

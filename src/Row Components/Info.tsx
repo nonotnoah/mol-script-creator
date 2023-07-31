@@ -1,4 +1,4 @@
-import { Check, CancelOutlined, } from '@mui/icons-material';
+import { Check,  } from '@mui/icons-material';
 import { Box, Fab, Modal, TextField } from '@mui/material'
 import React from 'react'
 import { InfoType } from '../types';
@@ -46,7 +46,6 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
   };
   const temp = React.useRef<InfoType>(infoProp)
   const [info, setInfo] = React.useState<InfoType>(infoProp)
-  const why2 = infoProp
 
   return (
     <>

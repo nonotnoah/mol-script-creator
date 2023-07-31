@@ -1,9 +1,7 @@
-import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { ChangeProps } from '../types'
 
 export default function Position({ val: initVal, handleChange }: ChangeProps) {
-  // const [positionType, setPositionType] = React.useState('left')
   return (
     <FormControl size='small' className='position-type'>
       <InputLabel id="position-type">Position</InputLabel>
@@ -14,10 +12,8 @@ export default function Position({ val: initVal, handleChange }: ChangeProps) {
         value={initVal}
         label="position-type"
         onChange={(event) => {
-          // setPositionType(event.target.value)
           handleChange(event.target.value)
         }}
-      // defaultValue={initVal}
       >
         <MenuItem value="left">Left</MenuItem>
         <MenuItem value="right">Right</MenuItem>

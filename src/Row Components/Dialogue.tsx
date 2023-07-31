@@ -9,7 +9,6 @@ export default function Dialogue({ val, handleChange }: ChangeProps) {
     setRemainingCharacters(maxLength - current)
   }
   const [multi, setMulti] = React.useState(false)
-  const expand = () => setMulti(true)
   const shrink = () => setMulti(false)
   return (
 

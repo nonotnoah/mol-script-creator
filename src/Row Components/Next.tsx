@@ -1,4 +1,3 @@
-import React from 'react'
 import { ChangeProps } from '../types'
 import { TextField } from '@mui/material'
 
@@ -12,7 +11,6 @@ export default function Next({ val, handleChange }: ChangeProps) {
         handleChange(event.target.value)
       }}
       value={val}
-      // error={val ? false : true}
       required
     />
   )

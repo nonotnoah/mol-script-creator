@@ -1,5 +1,4 @@
-import React from 'react'
-import { Message, ScriptStore } from '../types'
+import { ScriptStore } from '../types'
 import { Link } from 'react-router-dom'
 interface ProjectProps {
   // navigate: (script: ScriptStore) => void,

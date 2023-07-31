@@ -4,12 +4,11 @@ import { Grid } from '@mui/material'
 import { ScriptStore, Store } from '../types'
 import Project from './Project'
 import { Add, } from '@mui/icons-material'
-import { Outlet, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { nanoid } from 'nanoid'
 
 export default function Home() {
   const [scripts, setScripts] = React.useState<ScriptStore[]>([])
-  const [show, setShow] = React.useState(false)
   const load = () => {
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
     if (scripts) {
