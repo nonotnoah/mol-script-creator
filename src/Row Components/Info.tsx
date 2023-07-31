@@ -1,4 +1,4 @@
-import { Check,  } from '@mui/icons-material';
+import { Check, } from '@mui/icons-material';
 import { Box, Fab, Modal, TextField } from '@mui/material'
 import React from 'react'
 import { InfoType } from '../types';
@@ -53,26 +53,8 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
         className="info"
         onClick={handleOpen}
       >
-        <h1>{infoProp.title}</h1>
-        <div className="stats">
-          <table>
-            <tr>
-              <td>Locations</td>
-              <td>{infoProp.locations}</td>
-            </tr>
-            <tr>
-              <td>Characters</td>
-              <td>{infoProp.characters}</td>
-            </tr>
-            <tr>
-              <td>Description</td>
-              <td>{infoProp.description}</td>
-            </tr>
-          </table>
-          {/* <p>Locations: </p>
-          <p>Characters: {infoProp.characters}</p>
-          <p>Description: {infoProp.description}</p>
-          <p>{infoProp.start} - {infoProp.end}</p> */}
+        <div className="info-wrapper">
+          <h1>{infoProp.title}</h1>
         </div>
         <Modal
           open={open}

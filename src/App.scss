@@ -17,7 +17,7 @@
   align-items: center;
   flex: 1;
   // width: 100%;
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 .row-droppable {
   display: flex;
@@ -201,27 +201,47 @@
   justify-content: space-evenly;
   // border: 1px solid red;
 }
+.bold {
+  font-weight: bold;
+}
 .title-wrapper {
   display: flex;
   justify-content: left;
   width: 100%;
   // border: 1px solid red;
   .info {
+    .info-wrapper {
+      width: 200px;
+      height: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    justify-content: left;
     display: flex;
     height: 90px;
-    flex: 1;
+    // flex: 1;
     margin-top: 0px;
     margin-bottom: 40px;
     margin-left: 60px;
     margin-right: 60px;
     border-bottom: 1px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+  &:hover {
+    border-color: aqua;
+  }
     // border: 1px solid red;
     .stats {
       display: flex;
       // flex-direction: column;
       text-align: left;
       td {
-        border-bottom: 1px solid black
+        border-bottom: 1px solid black;
       }
       padding-left: 60px;
     }
@@ -230,7 +250,8 @@
   .export-script-btn-wrapper {
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: absolute;
+    right: 0;
     .save-script-btn {
       // display: flex;
       position: absolute;
