@@ -9,7 +9,7 @@ import Response from './Response';
 import Label from './Label';
 import Location from './Location';
 
-import { Button, Fab } from '@mui/material'
+import { Button, Fab, IconButton } from '@mui/material'
 import { Add, DeleteOutline } from '@mui/icons-material'
 import { ResponseType, RowProps } from '../types';
 import { Message } from '../types';
@@ -118,23 +118,22 @@ export default function Row({ rowData, id, returnRowData, deleteRow, characters,
   return (
     <>
       <div className='row' key={`row${rowData.id}`}>
-        <div className="delete-row-btn-wrapper">
-          <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
-            <DeleteOutline color='error' />
-          </Fab>
-        </div>
         <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
         <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
         {(rowDataState.type == 'Dialogue') && (
           <>
+            <IconButton
+              className='add-res-btn'
+              onClick={() => addRes()}
+            ><Add /></IconButton>
             <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
             <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
             <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
           </>
         )}
-            <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
-            <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
-        {(rowDataState.type == 'Dialogue') && (
+        <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
+        <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+        {/* {(rowDataState.type == 'Dialogue') && (
           <div className="add-res-btn-wrapper ">
             <Fab
               className='add-res-btn hide'
@@ -142,10 +141,15 @@ export default function Row({ rowData, id, returnRowData, deleteRow, characters,
               onClick={() => addRes()}
             ><Add /></Fab>
           </div>
-        )}
-        {(rowDataState.type == 'Narrator') && (
+        )} */}
+        <div className="delete-row-btn-wrapper">
+          <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+            <DeleteOutline color='error' />
+          </Fab>
+        </div>
+        {/* {(rowDataState.type == 'Narrator') && (
           < div className="add-res-btn-wrapper" />
-        )}
+        )} */}
       </div >
       {(rowDataState.type == 'Dialogue') && (
         <>

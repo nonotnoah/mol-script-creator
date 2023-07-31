@@ -24,16 +24,16 @@ export default function Response({ id, resData, returnResData, deleteRes }: ResP
   return (
     <div className="row">
       <div className='response'>
-        <div className="left-padding" />
+        {/* <div className="id">{`${id}.`}</div> */}
+        <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
+        <div className="res-spacer"></div>
+        <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRes(id)} className='delete-row-btn hide'>
             <DeleteOutline color='error' />
           </Fab>
         </div>
-        {/* <div className="id">{`${id}.`}</div> */}
-        <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
-        <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />
-        <div className="right-padding" />
+        <div className="res-spacer-right"></div>
       </div>
     </div>
   )

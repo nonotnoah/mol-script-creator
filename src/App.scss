@@ -15,6 +15,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex: 1;
+  // width: 100%;
+  border: 1px solid red;
+}
+.row-droppable {
+  display: flex;
+  flex-flow: column;
+  // flex: 1
   width: 100%;
   // border: 1px solid red;
 }
@@ -24,28 +32,51 @@
   position: relative;
   display: flex;
   flex-flow: column;
-  width: 100%;
+  // flex: 1;
+  // width: 10%;
   // height: 55px;
   justify-content: center;
   align-items: center;
+  margin-left: 60px;
+  // margin-right: 60px;
+  .drag-handle-wrapper {
+    display: flex;
+    // align-items: self-start ;
+    justify-content: center;
+    position: absolute;
+    height: 40px;
+    left: -40px;
+    top: 5px;
+    .drag-handle {
+      // position: absolute;
+      height: 30px;
+    }
+  }
   .row {
     // height: 40px;
     // border: 3px solid white;
     // position: absolute;
     padding-bottom: 10px;
     display: flex;
+    position: relative;
     width: 100%;
     justify-content: center;
     align-items: start;
-    .delete-row-btn-wrapper,
-    .add-res-btn-wrapper {
+    .delete-row-btn-wrapper {
+      // position: absolute;
       width: 60px;
+      // width: 5%;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    .delete-row-btn,
-    .add-res-btn {
+    .add-res-btn-wrapper {
+      width: 5%;
+      // margin-left: 5px;
+      // margin-right: 5px;
+      // width: 4%;
+    }
+    .delete-row-btn {
       display: none;
       z-index: 1;
     }
@@ -73,26 +104,29 @@
   }
   .response {
     display: flex;
-    flex: 1;
-    align-items: end;
+    width: 100%;
+    align-items: start;
     justify-content: center;
-    // margin-top: -10px;
-    // margin-left: 16%;
-    .left-padding {
-      width: 10%;
-    }
-    .id {
-      position: absolute;
-      left: calc(16% + 30px);
-    }
+    margin-left: 10%;
     .dialogue-input {
       flex: 1;
+      // border: 1px solid red;
+      // display: flex;
+      // width: 200px;
     }
     .next-input {
-      width: 10%;
+      // margin-left: 4.5%;
+      width: 11.2%;
     }
-    .right-padding {
-      width: calc(43.5% - 60px);
+    .res-spacer {
+      width: 40px;
+      height: 40px;
+    }
+    .res-spacer-right {
+      width: 37.2%; // i hate this
+      // width: calc(60px + 33.5%); // i hate this
+      // width: calc(43.5%); // i hate this
+      height: 40px;
     }
     .delete-wrapper {
       width: 7.5%;
@@ -184,6 +218,15 @@
     margin-right: 60px;
     border-bottom: 1px solid black;
     // border: 1px solid red;
+    .stats {
+      display: flex;
+      // flex-direction: column;
+      text-align: left;
+      td {
+        border-bottom: 1px solid black
+      }
+      padding-left: 60px;
+    }
   }
   .save-script-btn-wrapper,
   .export-script-btn-wrapper {

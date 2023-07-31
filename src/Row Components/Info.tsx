@@ -55,6 +55,26 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
         onClick={handleOpen}
       >
         <h1>{infoProp.title}</h1>
+        <div className="stats">
+          <table>
+            <tr>
+              <td>Locations</td>
+              <td>{infoProp.locations}</td>
+            </tr>
+            <tr>
+              <td>Characters</td>
+              <td>{infoProp.characters}</td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td>{infoProp.description}</td>
+            </tr>
+          </table>
+          {/* <p>Locations: </p>
+          <p>Characters: {infoProp.characters}</p>
+          <p>Description: {infoProp.description}</p>
+          <p>{infoProp.start} - {infoProp.end}</p> */}
+        </div>
         <Modal
           open={open}
           onClose={handleCloseWithoutSaving}

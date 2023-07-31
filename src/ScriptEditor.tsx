@@ -94,6 +94,14 @@ function ScriptEditor() {
     const updated = { [scriptId.current]: newScript }
     localStorage.setItem('scripts', JSON.stringify(updated))
   }
+  const exportScript = () => {
+    const script = JSON.stringify(rowRef.current)
+    const x = window.open();
+    if (!x) return
+    x.document.open();
+    x.document.write('<html><body><pre>' + script + '</pre></body></html>');
+    x.document.close();
+  }
   const addRow = () => {
     const id = rowId.current += 1
     console.log(id, 'added')
@@ -160,7 +168,7 @@ function ScriptEditor() {
           <Droppable droppableId='rows'>
             {(provided) => (
               <div
-                className="rows"
+                className="row-droppable"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -175,8 +183,13 @@ function ScriptEditor() {
                         <div className="row-wrapper"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          {...provided.dragHandleProps}
                         >
+                          <div
+                            {...provided.dragHandleProps}
+                            className='drag-handle-wrapper'
+                          >
+                            <img className="drag-handle" src='/drag.png'></img>
+                          </div>
                           {/* {row.id} {idx} */}
                           <Row
                             // key={`row${row.id}`}
