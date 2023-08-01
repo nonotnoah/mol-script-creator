@@ -33,7 +33,13 @@ function ScriptEditor() {
   }
 
   const copyCode = () => {
-    copy(JSON.stringify(rowRef.current))
+    const newScript: ScriptStore =
+    {
+      id: state.id,
+      script: rowRef.current,
+      info: info
+    }
+    copy(JSON.stringify(newScript))
     toast.success('Code copied to clipboard.')
   }
 
