@@ -32,6 +32,11 @@ function ScriptEditor() {
     setRowObj(items)
   }
 
+  const copyCode = () => {
+    copy(JSON.stringify(rowRef.current))
+    toast.success('Code copied to clipboard.')
+  }
+
   const saveScript = () => {
     toast.success('Saved script.')
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
@@ -73,23 +78,18 @@ function ScriptEditor() {
   const editRow = (newRow: Message, id: number) => {
     console.log(id, 'updated', newRow)
     const rowIdx = rowRef.current.findIndex(row => row.id === id)
-    if (rowIdx) rowRef.current.splice(rowIdx, 1, newRow)
+    if (rowIdx > -1) rowRef.current.splice(rowIdx, 1, newRow)
     console.log('ref:', rowRef.current, 'state:', rowObj)
   }
   const deleteRow = (id: number) => {
     console.log(id, 'deleted')
     const rowIdx = rowRef.current.findIndex(row => row.id === id)
-    if (rowIdx) rowRef.current.splice(rowIdx, 1)
+    if (rowIdx > -1) rowRef.current.splice(rowIdx, 1)
     if (Object.keys(rowObj).length == 0) {
       setRowObj([])
       return
     }
     setRowObj([...rowRef.current])
-  }
-
-  const copyCode = () => {
-    copy(JSON.stringify(rowRef.current))
-    toast.success('Code copied to clipboard.')
   }
 
   return (

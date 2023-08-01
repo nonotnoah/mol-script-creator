@@ -14,51 +14,49 @@ import { Add, DeleteOutline } from '@mui/icons-material'
 import { ResponseType, RowProps } from '../types';
 import { Message } from '../types';
 
-const getResObj = (res: ResponseType[]) => {
-  const obj: { [id: number]: ResponseType } = {}
-  for (let i = 0; i < res.length; i++) {
-    obj[res[i].id] = res[i]
-  }
-  return obj
-}
-export default function Row({ rowData, id, returnRowData, deleteRow, characters, locations }: RowProps) {
+export default function Row({
+  rowData,
+  id,
+  returnRowData,
+  deleteRow,
+  characters,
+  locations
+}: RowProps) {
   console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   const rowDataRef = React.useRef<Message>(rowData)
   const [rowDataState, setRowDataState] = React.useState<Message>(rowData)
-  const editRowData = (key: keyof Message, val: string | number) => {
+  const editRowData = (key: keyof Message, val: string | number | ResponseType[]) => {
     rowDataRef.current[key] = val as never // what the fuck
     setRowDataState({ ...rowDataRef.current })
     returnRowData(rowDataRef.current, id)
     console.log('updated', key, 'to', val)
   }
 
-  const resRef = React.useRef<{ [id: number]: ResponseType }>(getResObj(rowData.res))
-  const [resObj, setResObj] = React.useState<{ [id: number]: ResponseType }>(getResObj(rowData.res))
+  const resRef = React.useRef<ResponseType[]>(rowData.res)
   const resId = React.useRef(rowData.res.length)
 
   const addRes = () => {
     const id = resId.current += 1
     const newRes: ResponseType = { id: id, m: '', next: '' }
     console.log("🚀 ~ file: Row.tsx:61 ~ addRes ~ resId.current:", resId.current)
-    resRef.current[id] = newRes
-    setResObj({ ...resRef.current })
-    rowDataRef.current['res'] = [...Object.values(resRef.current)]
+    resRef.current.push(newRes)
+    editRowData('res', [...resRef.current])
   }
-  const editRes = (res: ResponseType, id: number) => {
-    resRef.current[id] = res
-    // setResObj({ ...resRef.current })
-    rowDataRef.current['res'] = [...Object.values(resRef.current)]
+  const editRes = (newRes: ResponseType, id: number) => {
+    const resIdx = resRef.current.findIndex(res => res.id === id)
+    if (resIdx > -1) resRef.current.splice(resIdx, 1, newRes)
+    editRowData('res', [...resRef.current])
+    console.log('edit res')
   }
   const deleteRes = (id: number) => {
-    delete resRef.current[id]
+    const resIdx = resRef.current.findIndex(res => res.id === id)
+    if (resIdx > -1) resRef.current.splice(resIdx, 1)
+    editRowData('res', [...resRef.current])
     if (Object.keys(resRef.current).length == 0) {
-      resRef.current = {}
-      setResObj({})
+      resRef.current = []
       rowDataRef.current['res'] = []
       return
     }
-    setResObj({ ...resRef.current })
-    rowDataRef.current['res'] = [...Object.values(resRef.current)]
   }
 
   return (
@@ -87,7 +85,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow, characters,
       </div >
       {(rowDataState.type == 'Dialogue') && (
         <>
-          {Object.values(resObj).map(res => (
+          {rowData.res.map(res => (
             <Response
               key={`response${res.id}`}
               id={res.id}

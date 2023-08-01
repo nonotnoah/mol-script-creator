@@ -6,26 +6,20 @@ import Dialogue from './Dialogue'
 import Next from './Next'
 
 export default function Response({ id, resData, returnResData, deleteRes }: ResProps) {
-  const [diag, setDiag] = React.useState<string>(resData.m || '')
-  const [next, setNext] = React.useState<string>(resData.next || '')
+  const componentResData = React.useRef<ResponseType>(resData)
 
-  const componentResData = React.useRef<ResponseType>()
-
-  React.useEffect(() => {
-    componentResData.current = {
-      id: resData.id,
-      m: diag,
-      next: next,
-    }
+  const editResData = (key: keyof ResponseType, val: string) => {
+    componentResData.current[key] = val as never // what the fuck
     returnResData(componentResData.current, id)
-  }, [diag, next, id, resData.id, returnResData])
+    // console.log('updated', key, 'to', val)
+  }
 
   return (
     <div className="row">
       <div className='response'>
-        <Dialogue val={resData.m || ''} handleChange={(value) => setDiag(value)} />
+        <Dialogue val={resData.m || ''} handleChange={(value) => editResData('m', value)} />
         <div className="res-spacer"></div>
-        <Next val={resData.next || ''} handleChange={(value) => setNext(value)} />
+        <Next val={resData.next || ''} handleChange={(value) => editResData('next', value)} />
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRes(id)} className='delete-row-btn hide'>
             <DeleteOutline color='error' />
