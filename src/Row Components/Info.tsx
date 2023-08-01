@@ -1,5 +1,5 @@
 import { Check, } from '@mui/icons-material';
-import { Box, Fab, Modal, TextField } from '@mui/material'
+import { Tooltip, Box, Fab, Modal, TextField } from '@mui/material'
 import React from 'react'
 import { InfoType } from '../types';
 
@@ -53,9 +53,11 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
         className="info"
         onClick={handleOpen}
       >
-        <div className="info-wrapper">
-          <h1>{infoProp.title}</h1>
-        </div>
+        <Tooltip title={'Edit Info'}>
+          <div className="info-wrapper">
+            <h1>{infoProp.title}</h1>
+          </div>
+        </Tooltip>
         <Modal
           open={open}
           onClose={handleCloseWithoutSaving}

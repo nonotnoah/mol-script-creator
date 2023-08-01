@@ -19,12 +19,13 @@ export default function Home() {
     setScripts([])
   }
   React.useEffect(() => {
+    // clearAllScripts()
     load()
   }, [])
-  const clearAllScripts = () => {
-    localStorage.clear()
-    load()
-  }
+  // const clearAllScripts = () => {
+  //   localStorage.clear()
+  //   load()
+  // }
 
   return (
     <>
@@ -52,15 +53,15 @@ export default function Home() {
             </Grid>
             {scripts.map((script, idx) => (
               <Grid item xs={3} key={idx}>
-                <Project script={script}></Project>
+                <Project load={load} script={script}></Project>
               </Grid>
             ))}
 
-            <Grid item key='del'>
+            {/* <Grid item key='del'>
               <div onClick={() => clearAllScripts()} className="project-wrapper">
                 delete
               </div>
-            </Grid>
+            </Grid> */}
           </Grid>
         </div>
       </div>

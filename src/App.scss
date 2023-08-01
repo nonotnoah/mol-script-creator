@@ -171,12 +171,31 @@
   .project-wrapper {
     border-radius: 10px;
     border: 1px solid black;
-    padding: 10px;
+    padding: 20px;
     height: 100px;
+    width: 230px;
     display: flex;
+    // overflow: hidden;
+    text-overflow: ellipsis;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+}
+.project-wrapper {
+  &:hover {
+    .hide {
+      display: flex;
+    }
+  }
+}
+.project-delete-btn-wrapper {
+  position: absolute;
+  margin-right: 260px;
+  margin-bottom: 130px;
+}
+.delete-project-btn {
+  position: absolute;
 }
 
 .info-fields-wrapper {
@@ -206,12 +225,14 @@
 }
 .title-wrapper {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   width: 100%;
   // border: 1px solid red;
   .info {
     .info-wrapper {
-      width: 200px;
+      padding-left: 30px;
+      padding-right: 30px;
+      max-width: 500px;
       height: 100px;
       white-space: nowrap;
       overflow: hidden;
@@ -232,9 +253,9 @@
     border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
-  &:hover {
-    border-color: aqua;
-  }
+    &:hover {
+      border-color: aqua;
+    }
     // border: 1px solid red;
     .stats {
       display: flex;
@@ -264,5 +285,17 @@
       top: 15px;
       right: calc(140px);
     }
+  }
+  .home-btn {
+    // display: flex;
+    position: absolute;
+    top: 15px;
+    left: 60px;
+  }
+  .home-btn-wrapper {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
   }
 }

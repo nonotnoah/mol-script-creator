@@ -46,7 +46,7 @@ export default function Row({ rowData, id, returnRowData, deleteRow, characters,
   }
   const editRes = (res: ResponseType, id: number) => {
     resRef.current[id] = res
-    setResObj({ ...resRef.current })
+    // setResObj({ ...resRef.current })
     rowDataRef.current['res'] = [...Object.values(resRef.current)]
   }
   const deleteRes = (id: number) => {

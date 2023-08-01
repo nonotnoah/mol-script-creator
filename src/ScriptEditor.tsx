@@ -1,11 +1,13 @@
 import React from 'react'
 import Row from './Row Components/Row'
 import { InfoType, Message, ScriptStore, Store } from './types'
-import { Fab, } from '@mui/material'
-import { Add, Download, Save } from '@mui/icons-material'
-import {useLocation } from 'react-router-dom'
+import { Fab, Tooltip, } from '@mui/material'
+import { Add, Code, Home, Save } from '@mui/icons-material'
+import { Link, useLocation } from 'react-router-dom'
 import Info from './Row Components/Info'
 import { DragDropContext, Draggable, DropResult, Droppable, } from 'react-beautiful-dnd';
+import copy from 'copy-to-clipboard'
+import toast, { Toaster } from 'react-hot-toast';
 
 function ScriptEditor() {
   const location = useLocation()
@@ -31,6 +33,7 @@ function ScriptEditor() {
   }
 
   const saveScript = () => {
+    toast.success('Saved script.')
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
     console.log("🚀 ~ file: ScriptEditor.tsx:42 ~ save ~ scripts:", scripts)
     const newScript: ScriptStore =
@@ -49,14 +52,7 @@ function ScriptEditor() {
     console.log('starting new store', updated)
     localStorage.setItem('scripts', JSON.stringify(updated))
   }
-  const exportScript = () => {
-    const script = JSON.stringify(rowRef.current)
-    const x = window.open();
-    if (!x) return
-    x.document.open();
-    x.document.write('<html><body><pre>' + script + '</pre></body></html>');
-    x.document.close();
-  }
+
   const addRow = () => {
     const id = rowId.current += 1
     console.log(id, 'added')
@@ -91,23 +87,41 @@ function ScriptEditor() {
     setRowObj([...rowRef.current])
   }
 
+  const copyCode = () => {
+    copy(JSON.stringify(rowRef.current))
+    toast.success('Code copied to clipboard.')
+  }
 
   return (
     <>
+      <Toaster />
       <div className="wrapper">
         <div className="title-wrapper" >
+          <Link to='/'>
+            <div className="home-btn-wrapper">
+              <div className="home-btn">
+                <Tooltip title={'Go Home'}>
+                  <Fab ><Home /></Fab>
+                </Tooltip>
+              </div>
+            </div>
+          </Link>
           <Info
             sendInfo={(info) => setInfo(info)}
             infoProp={info}
           />
           <div className="save-script-btn-wrapper">
             <div className="save-script-btn">
-              <Fab onClick={() => saveScript()}><Save /></Fab>
+              <Tooltip title={'Save'}>
+                <Fab onClick={() => saveScript()}><Save /></Fab>
+              </Tooltip>
             </div>
           </div>
           <div className="export-script-btn-wrapper">
             <div className="export-script-btn">
-              <Fab onClick={() => exportScript()}><Download /></Fab>
+              <Tooltip title={'Copy Code'}>
+                <Fab onClick={() => copyCode()}><Code /></Fab>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -161,7 +175,9 @@ function ScriptEditor() {
 
         <div className="add-row-btn-wrapper">
           <div className="add-row-btn">
-            <Fab onClick={() => addRow()}><Add /></Fab>
+            <Tooltip title={'Add Row'} placement='top' >
+              <Fab onClick={() => addRow()}><Add /></Fab>
+            </Tooltip>
           </div>
         </div>
       </div>
