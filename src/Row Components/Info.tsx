@@ -91,8 +91,10 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
                   sx={{ width: 300 }}
                   value={info.characters}
                   onChange={e => {
+                    const chars = e.target.value.split(',')
+                    const trimmedChars = chars.map(char => char.trim())
                     // temp.current.characters = e.target.value.split(',');
-                    setInfo({ ...info, characters: e.target.value.split(',') })
+                    setInfo({ ...info, characters: trimmedChars })
                   }}
                   label='Characters (comma separated)'></TextField>
               </div>
@@ -101,8 +103,10 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
                   sx={{ width: 300 }}
                   value={info.locations}
                   onChange={e => {
+                    const locs = e.target.value.split(',')
+                    const trimmedLocs = locs.map(loc => loc.trim())
                     // temp.current.locations = e.target.value.split(',');
-                    setInfo({ ...info, locations: e.target.value.split(',') })
+                    setInfo({ ...info, locations: trimmedLocs })
                   }}
                   label='Locations (comma separated)'></TextField>
               </div>
