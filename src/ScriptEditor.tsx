@@ -8,15 +8,16 @@ import Info from './Row Components/Info'
 import { DragDropContext, Draggable, DropResult, Droppable, } from 'react-beautiful-dnd';
 import copy from 'copy-to-clipboard'
 import toast, { Toaster } from 'react-hot-toast';
+import Loader from './Loader'
 
 function ScriptEditor() {
   const location = useLocation()
-  const state = location.state as ScriptStore
+  const state = React.useRef(location.state as ScriptStore)
 
-  const [info, setInfo] = React.useState<InfoType>(state.info)
-  const rowRef = React.useRef<Message[]>(state.script)
-  const [rowObj, setRowObj] = React.useState<Message[]>(state.script)
-  const rowId = React.useRef(state.script.length)
+  const [info, setInfo] = React.useState<InfoType>(state.current.info)
+  const rowRef = React.useRef<Message[]>(state.current.script)
+  const [rowObj, setRowObj] = React.useState<Message[]>(state.current.script)
+  const rowId = React.useRef(state.current.script.length)
   console.log("🚀 ~ file: ScriptEditor.tsx:31 ~ ScriptEditor ~ rowId:", rowId)
 
   const handleOnDragEnd = (result: DropResult) => {
@@ -35,7 +36,7 @@ function ScriptEditor() {
   const copyCode = () => {
     const newScript: ScriptStore =
     {
-      id: state.id,
+      id: state.current.id,
       script: rowRef.current,
       info: {
         ...info,
@@ -53,17 +54,17 @@ function ScriptEditor() {
     console.log("🚀 ~ file: ScriptEditor.tsx:42 ~ save ~ scripts:", scripts)
     const newScript: ScriptStore =
     {
-      id: state.id,
+      id: state.current.id,
       script: rowRef.current,
       info: info
     }
     if (scripts != null) {
-      const updated = { ...scripts, [state.id]: newScript }
-      console.log('scripts exist, saving', state.id, 'over top', updated)
+      const updated = { ...scripts, [state.current.id]: newScript }
+      console.log('scripts exist, saving', state.current.id, 'over top', updated)
       localStorage.setItem('scripts', JSON.stringify(updated))
       return
     }
-    const updated = { [state.id]: newScript }
+    const updated = { [state.current.id]: newScript }
     console.log('starting new store', updated)
     localStorage.setItem('scripts', JSON.stringify(updated))
   }
@@ -102,6 +103,28 @@ function ScriptEditor() {
     setRowObj([...rowRef.current])
   }
 
+  const [loadedCode, setLoadedCode] = React.useState('')
+  const loadCode = (code: string) => {
+    try {
+      const newState = JSON.parse(code) as ScriptStore | undefined
+      if (newState) {
+        state.current = newState
+        console.log("🚀 ~ file: ScriptEditor.tsx:112 ~ loadCode ~ state.current:", state.current)
+        setInfo(state.current.info)
+        rowRef.current = state.current.script
+        setRowObj(state.current.script)
+        rowId.current = state.current.script.length
+        setLoadedCode(code)
+        toast.success('Loaded Code Successfully')
+      }
+    }
+    catch (e: unknown) {
+      if (e instanceof SyntaxError) toast.error('Invalid Script Code')
+      return
+    }
+
+  }
+
   return (
     <>
       <Toaster />
@@ -116,6 +139,10 @@ function ScriptEditor() {
               </div>
             </div>
           </Link>
+          <Loader
+            sendCode={code => loadCode(code)}
+            code={loadedCode}
+          />
           <Info
             sendInfo={(info) => setInfo(info)}
             infoProp={info}

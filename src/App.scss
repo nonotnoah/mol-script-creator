@@ -305,4 +305,16 @@
     position: absolute;
     left: 0;
   }
+  .load-btn-wrapper {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+  }
+  .load-btn {
+    // display: flex;
+    position: absolute;
+    top: 15px;
+    left: 140px;
+  }
 }

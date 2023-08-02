@@ -26,6 +26,11 @@ interface InfoProps {
 }
 
 export default function Info({ sendInfo, infoProp }: InfoProps) {
+  console.log("🚀 ~ file: Info.tsx:29 ~ Info ~ infoProp:", infoProp)
+  React.useEffect(() => {
+    console.log('render')
+    null
+  }, [infoProp])
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     if (!open) {
@@ -45,7 +50,9 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
     setInfo({ ...temp.current })
   };
   const temp = React.useRef<InfoType>(infoProp)
+  console.log("🚀 ~ file: Info.tsx:49 ~ Info ~ temp:", temp)
   const [info, setInfo] = React.useState<InfoType>(infoProp)
+  console.log("🚀 ~ file: Info.tsx:50 ~ Info ~ info:", info)
 
   return (
     <>
@@ -59,6 +66,7 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
           </div>
         </Tooltip>
         <Modal
+          keepMounted={true}
           open={open}
           onClose={handleCloseWithoutSaving}
 
