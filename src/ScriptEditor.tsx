@@ -74,9 +74,9 @@ function ScriptEditor() {
       res: [],
       label: '',
       emotion: 'neutral',
-      pos: 'left',
-      char: '',
-      location: ''
+      pos: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].pos : 'left',
+      char: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].char : '',
+      location: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].location : ''
     }
     rowRef.current.push(newRow)
     setRowObj([...rowRef.current])
@@ -163,8 +163,8 @@ function ScriptEditor() {
                           <Row
                             id={row.id}
                             rowData={row}
-                            characters={info.characters}
-                            locations={info.locations}
+                            characters={info.characters.map(char => char.trim())}
+                            locations={info.locations.map(local => local.trim())}
                             returnRowData={(val, id) => editRow(val, id)}
                             deleteRow={id => deleteRow(id)}
                           />
