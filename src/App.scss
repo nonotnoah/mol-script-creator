@@ -198,7 +198,14 @@
   position: absolute;
 }
 
+.info-row-wrapper {
+  display: flex;
+  flex-direction: row;
+}
 .info-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-right: 10px;
   // border: 1px solid red;
   .info-field {
     padding-bottom: 10px;

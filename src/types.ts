@@ -50,6 +50,7 @@ export interface Store {
 }
 export interface InfoType {
   title: string
+  summary: string
   description: string
   start: number
   end: number

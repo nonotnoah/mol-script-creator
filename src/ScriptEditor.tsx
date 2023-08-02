@@ -37,7 +37,11 @@ function ScriptEditor() {
     {
       id: state.id,
       script: rowRef.current,
-      info: info
+      info: {
+        ...info,
+        characters: info.characters.map(char => char.trim()),
+        locations: info.locations.map(local => local.trim())
+      }
     }
     copy(JSON.stringify(newScript))
     toast.success('Code copied to clipboard.')
@@ -163,8 +167,8 @@ function ScriptEditor() {
                           <Row
                             id={row.id}
                             rowData={row}
-                            characters={info.characters.map(char => char.trim())}
-                            locations={info.locations.map(local => local.trim())}
+                            characters={info.characters}
+                            locations={info.locations}
                             returnRowData={(val, id) => editRow(val, id)}
                             deleteRow={id => deleteRow(id)}
                           />
