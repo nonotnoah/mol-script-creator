@@ -108,6 +108,11 @@ function ScriptEditor() {
     try {
       const newState = JSON.parse(code) as ScriptStore | undefined
       if (newState) {
+        if (!newState.script || !newState.id || !newState.info) {
+          toast.error('Invalid Script Code')
+          console.warn(newState, 'missing something')
+          return
+        }
         state.current = newState
         console.log("🚀 ~ file: ScriptEditor.tsx:112 ~ loadCode ~ state.current:", state.current)
         setInfo(state.current.info)
@@ -119,7 +124,10 @@ function ScriptEditor() {
       }
     }
     catch (e: unknown) {
-      if (e instanceof SyntaxError) toast.error('Invalid Script Code')
+      if (e instanceof SyntaxError) {
+        toast.error('Invalid Script Code')
+      }
+      console.warn('Invalid JSON')
       return
     }
 
