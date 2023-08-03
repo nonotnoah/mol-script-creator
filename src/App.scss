@@ -155,10 +155,11 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  height: 60px;
   .add-row-btn {
     // display: flex;
     position: absolute;
-    bottom: -70px;
+    bottom: 0px;
     right: calc(60px);
   }
 }

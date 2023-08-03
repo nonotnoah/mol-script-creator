@@ -15,6 +15,8 @@ export default function DialogueType({ val: initVal, handleChange }: ChangeProps
       >
         <MenuItem value="Dialogue">Dialogue</MenuItem>
         <MenuItem value="Narrator">Narrator</MenuItem>
+        <MenuItem value="Text">Text</MenuItem>
+        <MenuItem value="End">End Script</MenuItem>
       </Select>
     </FormControl>
   )

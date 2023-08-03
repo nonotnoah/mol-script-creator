@@ -73,7 +73,7 @@ function ScriptEditor() {
     const id = rowId.current += 1
     console.log(id, 'added')
     const newRow: Message = {
-      type: 'Dialogue',
+      type: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].type : 'Dialogue',
       id: id,
       m: '',
       res: [],

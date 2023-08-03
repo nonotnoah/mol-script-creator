@@ -59,43 +59,118 @@ export default function Row({
     }
   }
 
-  return (
-    <>
+  if (rowDataState.type == 'End') {
+    return (
       <div className='row' key={`row${rowData.id}`}>
         <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
-        <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
-        {(rowDataState.type == 'Dialogue') && (
-          <>
-            <IconButton
-              className='add-res-btn'
-              onClick={() => addRes()}
-            ><Add /></IconButton>
-            <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
-            <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
-            <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
-          </>
-        )}
-        <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
-        <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+        <div className="end-spacer" style={
+          {
+            justifyContent: 'center',
+            alignItems: 'center',
+            border: '2px dashed red',
+            flex: 1,
+            height: 36,
+            // background: 'white'
+          }}>
+        </div>
         <div className="delete-row-btn-wrapper">
           <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
             <DeleteOutline color='error' />
           </Fab>
         </div>
-      </div >
-      {(rowDataState.type == 'Dialogue') && (
-        <>
-          {rowData.res.map(res => (
-            <Response
-              key={`response${res.id}`}
-              id={res.id}
-              resData={res}
-              returnResData={(val, id) => editRes(val, id)}
-              deleteRes={id => deleteRes(id)}
-            />
-          ))}
-        </>
-      )}
-    </>
-  )
+      </div>
+    )
+  }
+
+  if (rowDataState.type == 'Dialogue') {
+    return (
+      <>
+        <div className='row' key={`row${rowData.id}`}>
+          <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
+          <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
+          <IconButton
+            className='add-res-btn'
+            onClick={() => addRes()}
+          ><Add /></IconButton>
+          <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+          <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
+          <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
+          <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
+          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <div className="delete-row-btn-wrapper">
+            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+              <DeleteOutline color='error' />
+            </Fab>
+          </div>
+        </div >
+        {rowData.res.map(res => (
+          <Response
+            key={`response${res.id}`}
+            id={res.id}
+            resData={res}
+            returnResData={(val, id) => editRes(val, id)}
+            deleteRes={id => deleteRes(id)}
+          />
+        ))}
+      </>
+    )
+  }
+
+  if (rowDataState.type == 'Narrator') {
+    return (
+      <>
+        <div className='row' key={`row${rowData.id}`}>
+          <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
+          <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
+          <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
+          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <div className="delete-row-btn-wrapper">
+            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+              <DeleteOutline color='error' />
+            </Fab>
+          </div>
+        </div >
+        {rowData.res.map(res => (
+          <Response
+            key={`response${res.id}`}
+            id={res.id}
+            resData={res}
+            returnResData={(val, id) => editRes(val, id)}
+            deleteRes={id => deleteRes(id)}
+          />
+        ))}
+      </>
+    )
+  }
+
+  if (rowDataState.type == 'Text') {
+    return (
+      <>
+        <div className='row' key={`row${rowData.id}`}>
+          <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
+          <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
+          <IconButton
+            className='add-res-btn'
+            onClick={() => addRes()}
+          ><Add /></IconButton>
+          <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <div className="delete-row-btn-wrapper">
+            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+              <DeleteOutline color='error' />
+            </Fab>
+          </div>
+        </div >
+        {rowData.res.map(res => (
+          <Response
+            key={`response${res.id}`}
+            id={res.id}
+            resData={res}
+            returnResData={(val, id) => editRes(val, id)}
+            deleteRes={id => deleteRes(id)}
+          />
+        ))}
+      </>
+    )
+  }
 }
