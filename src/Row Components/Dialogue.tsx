@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextField, InputAdornment } from '@mui/material'
-const maxLength = 100
+const maxLength = 150
 import { ChangeProps } from '../types';
 
 export default function Dialogue({ val, handleChange }: ChangeProps) {
