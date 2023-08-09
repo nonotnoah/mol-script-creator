@@ -39,7 +39,7 @@ export default function Home() {
               <Link to={`script/new`} state={{
                 id: nanoid(5),
                 script: [],
-                info: { title: 'Untitled Script', description: '', characters: [], locations: [], start: 700, end: 2300 }
+                info: { summary: '', title: 'Untitled Script', description: '', characters: [], locations: [], start: 700, end: 2300 }
               }}>
                 <div
                   className="project-wrapper"
