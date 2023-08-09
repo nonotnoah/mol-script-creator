@@ -118,7 +118,8 @@ function ScriptEditor() {
         setInfo(state.current.info)
         rowRef.current = state.current.script
         setRowObj(state.current.script)
-        rowId.current = state.current.script.length
+        const ids = rowRef.current.map(row => row.id)
+        rowId.current = Math.max(...ids) + 1
         setLoadedCode(code)
         toast.success('Loaded Code Successfully')
       }
