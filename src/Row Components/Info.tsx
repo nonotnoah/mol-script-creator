@@ -77,24 +77,34 @@ export default function Info({ sendInfo, infoProp }: InfoProps) {
 
               <div className="info-fields-wrapper" >
                 <div className="info-field">
-                  <TextField
-                    sx={{ width: 300 }}
-                    value={info.title}
-                    onChange={e => {
-                      // temp.current.title = e.target.value;
-                      setInfo({ ...info, title: e.target.value })
-                    }}
-                    label='Title'></TextField>
+                  <Tooltip
+                    placement={'left'}
+                    title={"Ex: \"Helped Anthony with an assignment\""}
+                  >
+                    <TextField
+                      sx={{ width: 300 }}
+                      value={info.title}
+                      onChange={e => {
+                        // temp.current.title = e.target.value;
+                        setInfo({ ...info, title: e.target.value })
+                      }}
+                      label={'Title'}></TextField>
+                  </Tooltip>
                 </div>
                 <div className="info-field">
-                  <TextField
-                    sx={{ width: 300 }}
-                    value={info.summary}
-                    onChange={e => {
-                      // temp.current.description = e.target.value;
-                      setInfo({ ...info, summary: e.target.value })
-                    }}
-                    label='Summary'></TextField>
+                  <Tooltip
+                    placement={'left'}
+                    title={"Write in first person perspective"}
+                  >
+                    <TextField
+                      sx={{ width: 300 }}
+                      value={info.summary}
+                      onChange={e => {
+                        // temp.current.description = e.target.value;
+                        setInfo({ ...info, summary: e.target.value })
+                      }}
+                      label='Summary'></TextField>
+                  </Tooltip>
                 </div>
                 <div className="info-field">
                   <TextField
