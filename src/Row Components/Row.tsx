@@ -8,6 +8,7 @@ import Position from './Position';
 import Response from './Response';
 import Label from './Label';
 import Location from './Location';
+import HarmonyAmount from './HarmonyAmount';
 
 import { Fab, IconButton } from '@mui/material'
 import { Add, DeleteOutline } from '@mui/icons-material'
@@ -82,6 +83,47 @@ export default function Row({
     )
   }
 
+  if (rowDataState.type == 'Harmony') {
+    return (
+      <>
+        <div className='row' key={`row${rowData.id}`}>
+          <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
+          <div
+            className="end-spacer"
+            style={
+              {
+                justifyContent: 'left',
+                alignItems: 'center',
+                // border: '2px dotted yellow',
+                borderRadius: 5,
+                flex: 1,
+                height: 36,
+                flexFlow: 'row',
+                display: 'flex'
+                // background: 'white'
+              }}>
+            <div className="harmony">
+              <span className="text">Change</span>
+            </div>
+            <Speaker variant='standard' characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+            <div className="harmony">
+              <span className="text">Harmony by</span>
+            </div>
+            <HarmonyAmount val={rowData.harmony?.toString() || '0'} handleChange={(value) => editRowData('harmony', parseInt(value))} />
+            <div className="harmony">
+              <span className="text">point(s).</span>
+            </div>
+          </div>
+          <div className="delete-row-btn-wrapper">
+            <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
+              <DeleteOutline color='error' />
+            </Fab>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   if (rowDataState.type == 'Dialogue') {
     return (
       <>
@@ -92,7 +134,7 @@ export default function Row({
             className='add-res-btn'
             onClick={() => addRes()}
           ><Add /></IconButton>
-          <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+          <Speaker variant={undefined} characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
           <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
           <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
           <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
@@ -153,7 +195,7 @@ export default function Row({
             className='add-res-btn'
             onClick={() => addRes()}
           ><Add /></IconButton>
-          <Speaker characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
+          <Speaker variant={undefined} characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
           <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
           <div className="delete-row-btn-wrapper">
             <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
@@ -173,4 +215,5 @@ export default function Row({
       </>
     )
   }
+
 }

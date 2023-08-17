@@ -1,6 +1,6 @@
 import React from 'react'
 import Row from './Row Components/Row'
-import { InfoType, Message, ScriptStore, Store } from './types'
+import { InfoType, Message, OldScriptStore, ScriptStore, Store } from './types'
 import { Fab, Tooltip, } from '@mui/material'
 import { Add, Code, Home, Save } from '@mui/icons-material'
 import { Link, useLocation } from 'react-router-dom'
@@ -13,6 +13,9 @@ import Loader from './Loader'
 function ScriptEditor() {
   const location = useLocation()
   const state = React.useRef(location.state as ScriptStore)
+  if (!('harmony' in state.current.script[0])) {
+    state.current.script.map(oldMsg => oldMsg['harmony'] = 0)
+  }
 
   const [info, setInfo] = React.useState<InfoType>(state.current.info)
   const rowRef = React.useRef<Message[]>(state.current.script)
@@ -44,7 +47,7 @@ function ScriptEditor() {
         locations: info.locations.map(local => local.trim())
       }
     }
-    copy(JSON.stringify(newScript))
+    copy(JSON.stringify(newScript, null, 2))
     toast.success('Code copied to clipboard.')
   }
 
@@ -52,11 +55,15 @@ function ScriptEditor() {
     toast.success('Saved script.')
     const scripts = JSON.parse(localStorage.getItem('scripts') || 'null') as Store | null
     console.log("🚀 ~ file: ScriptEditor.tsx:42 ~ save ~ scripts:", scripts)
-    const newScript: ScriptStore =
+    const newScript: ScriptStore | OldScriptStore =
     {
       id: state.current.id,
       script: rowRef.current,
       info: info
+    }
+    // updates old scripts with new property if missing
+    if (!('harmony' in newScript.script[0])) {
+      newScript.script.map(oldMsg => oldMsg['harmony'] = 0)
     }
     if (scripts != null) {
       const updated = { ...scripts, [state.current.id]: newScript }
@@ -81,12 +88,16 @@ function ScriptEditor() {
       emotion: 'neutral',
       pos: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].pos : 'left',
       char: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].char : '',
-      location: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].location : ''
+      location: rowRef.current.length > 0 ? rowRef.current[rowRef.current.length - 1].location : '',
+      harmony: 0
     }
     rowRef.current.push(newRow)
     setRowObj([...rowRef.current])
   }
   const editRow = (newRow: Message, id: number) => {
+    if (newRow.type != 'Harmony') {
+      newRow.harmony = 0
+    }
     console.log(id, 'updated', newRow)
     const rowIdx = rowRef.current.findIndex(row => row.id === id)
     if (rowIdx > -1) rowRef.current.splice(rowIdx, 1, newRow)
@@ -106,13 +117,18 @@ function ScriptEditor() {
   const [loadedCode, setLoadedCode] = React.useState('')
   const loadCode = (code: string) => {
     try {
-      const newState = JSON.parse(code) as ScriptStore | undefined
+      const newState = JSON.parse(code) as ScriptStore | OldScriptStore | undefined
       if (newState) {
         if (!newState.script || !newState.id || !newState.info) {
           toast.error('Invalid Script Code')
           console.warn(newState, 'missing something')
           return
         }
+        // attaches missing property if not present
+        if (!('harmony' in newState.script[0])) {
+          newState.script.map(oldMsg => oldMsg['harmony'] = 0)
+        }
+        //@ts-expect-error missing properties will be attached
         state.current = newState
         console.log("🚀 ~ file: ScriptEditor.tsx:112 ~ loadCode ~ state.current:", state.current)
         setInfo(state.current.info)
@@ -203,8 +219,8 @@ function ScriptEditor() {
                           <Row
                             id={row.id}
                             rowData={row}
-                            characters={info.characters}
-                            locations={info.locations}
+                            characters={info.characters.map(char => char.trim())}
+                            locations={info.locations.map(loc => loc.trim())}
                             returnRowData={(val, id) => editRow(val, id)}
                             deleteRow={id => deleteRow(id)}
                           />

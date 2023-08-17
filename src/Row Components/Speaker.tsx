@@ -3,15 +3,18 @@ import { ChangeProps } from '../types'
 
 interface SpeakerProps extends ChangeProps {
   characters: string[]
+  variant: "standard" | "outlined" | "filled" | undefined
 }
 
-export default function Speaker({ characters, val, handleChange }: SpeakerProps) {
+export default function Speaker({ variant, characters, val, handleChange }: SpeakerProps) {
   return (
     <FormControl
       size='small'
       className='speakerOptionWrapper'>
-      <InputLabel id="speaker-type">Speaker</InputLabel>
+      <InputLabel id="speaker-type">{variant ? '' : 'Speaker'}</InputLabel>
       <Select
+        sx={variant ? { bottom: 5 } : {}}
+        variant={variant}
         size='small'
         labelId="speaker-type"
         id="speaker-type"
@@ -22,7 +25,13 @@ export default function Speaker({ characters, val, handleChange }: SpeakerProps)
         }}
       >
         {characters.map(char => (
-          <MenuItem value={char}>{char}</MenuItem>
+          char == 'Protagonist' ? variant == 'standard' ? (
+            null
+          ) : (
+            <MenuItem value={char}>{char}</MenuItem>
+          ) : (
+            <MenuItem value={char}>{char}</MenuItem>
+          )
         ))}
 
       </Select>

@@ -10,6 +10,21 @@ export interface Message {
   emotion: string
   location: string
   pos: string
+  harmony: number
+}
+interface OldMessage {
+  // type: 'Dialogue' | 'Narrator'
+  type: string
+  id: number
+  m: string
+  char: string
+  label: string
+  next?: string
+  res: ResponseType[]
+  emotion: string
+  location: string
+  pos: string
+  harmony?: number
 }
 
 export interface ResponseType {
@@ -43,6 +58,13 @@ export interface RowProps {
 export interface ScriptStore {
   id: string
   script: Message[]
+  info: InfoType
+}
+
+export interface OldScriptStore {
+  // doesn't have harmony
+  id: string
+  script: OldMessage[]
   info: InfoType
 }
 export interface Store {
