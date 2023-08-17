@@ -192,6 +192,9 @@
     justify-content: center;
     align-items: center;
   }
+  .version {
+    position: absolute;
+  }
 }
 .project-wrapper {
   &:hover {

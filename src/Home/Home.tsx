@@ -72,6 +72,9 @@ export default function Home() {
             </Grid> */}
           </Grid>
         </div>
+      <div className="version">
+        <p>Version 1.1</p>
+      </div>
       </div>
     </>
   )
