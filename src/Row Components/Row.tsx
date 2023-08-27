@@ -20,8 +20,11 @@ export default function Row({
   id,
   returnRowData,
   deleteRow,
+  onLabelFocus,
+  onLabelBlur,
   characters,
-  locations
+  locations,
+  highlight
 }: RowProps) {
   console.log("🚀 ~ file: Row.tsx:26 ~ Row ~ rowData:", rowData)
   const rowDataRef = React.useRef<Message>(rowData)
@@ -138,7 +141,7 @@ export default function Row({
           <Emotion val={rowData.emotion} handleChange={(value) => editRowData('emotion', value)} />
           <Position val={rowData.pos} handleChange={(value) => editRowData('pos', value)} />
           <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
-          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <Label highlight={highlight} onBlur={(label) => onLabelBlur(label)} onFocus={(label) => onLabelFocus(label)} val={rowData.label} handleChange={(value) => editRowData('label', value)} />
           <div className="delete-row-btn-wrapper">
             <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
               <DeleteOutline color='error' />
@@ -152,6 +155,9 @@ export default function Row({
             resData={res}
             returnResData={(val, id) => editRes(val, id)}
             deleteRes={id => deleteRes(id)}
+            onLabelBlur={(label) => onLabelBlur(label)}
+            onLabelFocus={(label) => onLabelFocus(label)}
+            highlight={highlight}
           />
         ))}
       </>
@@ -165,7 +171,7 @@ export default function Row({
           <DialogueType val={rowData.type} handleChange={(value) => editRowData('type', value)} />
           <Dialogue val={rowData.m} handleChange={(value) => editRowData('m', value)} />
           <Location locations={locations} val={rowData.location} handleChange={(value) => editRowData('location', value)} />
-          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <Label highlight={highlight} onBlur={(label) => onLabelBlur(label)} onFocus={(label) => onLabelFocus(label)} val={rowData.label} handleChange={(value) => editRowData('label', value)} />
           <div className="delete-row-btn-wrapper">
             <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
               <DeleteOutline color='error' />
@@ -179,6 +185,9 @@ export default function Row({
             resData={res}
             returnResData={(val, id) => editRes(val, id)}
             deleteRes={id => deleteRes(id)}
+            onLabelBlur={(label) => onLabelBlur(label)}
+            onLabelFocus={(label) => onLabelFocus(label)}
+            highlight={highlight}
           />
         ))}
       </>
@@ -196,7 +205,7 @@ export default function Row({
             onClick={() => addRes()}
           ><Add /></IconButton>
           <Speaker variant={undefined} characters={characters} val={rowData.char} handleChange={(value) => editRowData('char', value)} />
-          <Label val={rowData.label} handleChange={(value) => editRowData('label', value)} />
+          <Label highlight={highlight} onBlur={(label) => onLabelBlur(label)} onFocus={(label) => onLabelFocus(label)} val={rowData.label} handleChange={(value) => editRowData('label', value)} />
           <div className="delete-row-btn-wrapper">
             <Fab size='small' onClick={() => deleteRow(id)} className='delete-row-btn hide'>
               <DeleteOutline color='error' />
@@ -210,6 +219,9 @@ export default function Row({
             resData={res}
             returnResData={(val, id) => editRes(val, id)}
             deleteRes={id => deleteRes(id)}
+            onLabelBlur={(label) => onLabelBlur(label)}
+            onLabelFocus={(label) => onLabelFocus(label)}
+            highlight={highlight}
           />
         ))}
       </>

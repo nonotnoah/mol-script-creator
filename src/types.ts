@@ -11,6 +11,7 @@ export interface Message {
   location: string
   pos: string
   harmony: number
+  highlight?: boolean
 }
 interface OldMessage {
   // type: 'Dialogue' | 'Narrator'
@@ -32,6 +33,7 @@ export interface ResponseType {
   m: string
   level?: number // only show if player meets compatability req
   next: string
+  highlight?: boolean | undefined
 }
 
 export interface ChangeProps {
@@ -44,6 +46,9 @@ export interface ResProps {
   id: number
   returnResData: (res: ResponseType, id: number) => void
   deleteRes: (id: number) => void
+  onLabelFocus: (label: string) => void
+  onLabelBlur: (label: string) => void
+  highlight: boolean | undefined
 }
 
 export interface RowProps {
@@ -51,8 +56,11 @@ export interface RowProps {
   id: number
   returnRowData: (row: Message, id: number) => void
   deleteRow: (id: number) => void
+  onLabelFocus: (label: string) => void
+  onLabelBlur: (label: string) => void
   characters: string[]
   locations: string[]
+  highlight: boolean | undefined
 }
 
 export interface ScriptStore {

@@ -149,6 +149,20 @@ function ScriptEditor() {
     }
 
   }
+  const highLightLabel = (label: string) => {
+    const matchingLabels = rowRef.current.filter(msg => msg.label == label)
+    const matchingNexts = rowRef.current.map(msg => msg.res.filter(next => next.next == label))
+    // matchingLabels.map(msg => msg.highlight = true)
+    matchingNexts.map(msg => msg.highlight = true)
+    setRowObj([...rowRef.current])
+  }
+  const blurLabel = (label: string) => {
+    const matchingLabels = rowRef.current.filter(msg => msg.label == label)
+    // const matchingNexts = rowRef.current.filter(msg => msg.res.map(next => next.next == label))
+    matchingLabels.map(msg => msg.highlight = false)
+    // matchingNexts.map(msg => msg.highlight = false)
+    setRowObj([...rowRef.current])
+  }
 
   return (
     <>
@@ -223,6 +237,9 @@ function ScriptEditor() {
                             locations={info.locations.map(loc => loc.trim())}
                             returnRowData={(val, id) => editRow(val, id)}
                             deleteRow={id => deleteRow(id)}
+                            onLabelFocus={(label) => highLightLabel(label)}
+                            onLabelBlur={(label) => blurLabel(label)}
+                            highlight={row.highlight}
                           />
                         </div>
                       )}

@@ -332,3 +332,13 @@
     left: 140px;
   }
 }
+.label-input.highlight {
+  .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: green !important;
+  }
+}
+.next-input.highlight {
+  .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: green !important;
+  }
+}
